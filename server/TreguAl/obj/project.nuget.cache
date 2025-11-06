@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "ohqOtTC0oCM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\anes\\Desktop\\TreguAL\\server\\TreguAl\\TreguAl.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\anes\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.10\\microsoft.aspnetcore.openapi.9.0.10.nupkg.sha512",
+    "C:\\Users\\anes\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

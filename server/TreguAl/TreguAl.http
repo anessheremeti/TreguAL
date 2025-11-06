@@ -1,0 +1,6 @@
+@TreguAl_HostAddress = http://localhost:5104
+
+GET {{TreguAl_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
