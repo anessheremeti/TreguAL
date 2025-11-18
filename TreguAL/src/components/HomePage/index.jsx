@@ -28,7 +28,7 @@ const HomePage = () => {
 Blej, shis ose gjej çdo gjë që të duhet në një vend të vetëm.
             </p>
             <div className="pt-6">
-              <button className="border border-solid border-white py-2.5 px-11 ">
+              <button className="border border- hover:cursor-pointer border-white py-2.5 px-11 ">
                 Shiko më shumë
               </button>
             </div>
@@ -95,7 +95,7 @@ Zbulo ofertat që nuk duhen humbur!
 Blej me siguri, krahaso me lehtësi dhe përfito më shumë çdo ditë!
         </p>
         <div className="pt-6">
-          <button className="border text-white border-solid border-white py-2.5 px-11 ">
+          <button className="border hover:cursor-pointer text-white border-solid border-white py-2.5 px-11 ">
             Shiko
           </button>
         </div>
@@ -112,7 +112,7 @@ Karrige që kombinojnë stilin dhe rehatinë      </h2>
         Punë, lojë apo relaks – gjej karrigen që përputhet me stilin tënd të jetesës.
 Modele ergonomike, materiale cilësore dhe dizajn modern që e kthejnë çdo hapësirë në një ambient komod dhe elegant.
       </p>
-      <button className="inline-flex items-center justify-center gap-2 border border-gray-400 text-gray-100 px-8 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400">
+      <button className="inline-flex items-center justify-center hover:cursor-pointer gap-2 border border-gray-400 text-gray-100 px-8 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400">
         Shiko me shume
         <span className="text-lg">→</span>
       </button>
@@ -146,7 +146,7 @@ Modele ergonomike, materiale cilësore dhe dizajn modern që e kthejnë çdo hap
         Nga tavolinat për punë në shtëpi te ato për setup-e gaming, çdo detaj është menduar për funksionalitet, rehati dhe pamje të sofistikuar.
 Krijo hapësirën tënde perfekte me tavolina që përshtaten me ritmin tënd.
       </p>
-      <button className="relative inline-flex items-center gap-2 border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center">
+      <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center">
         Shiko më shumë
         <span className="text-lg">→</span>
       </button>
@@ -162,7 +162,7 @@ Krijo hapësirën tënde perfekte me tavolina që përshtaten me ritmin tënd.
      Ndriçues që sjellin atmosferë, stil dhe funksionalitet.
 Nga llambat minimaliste deri te dritat LED me dizajn inovativ — çdo produkt është zgjedhur për të përmirësuar ndjesinë dhe komoditetin në çdo hapësirë.
       </p>
-      <button className="relative inline-flex items-center gap-2 border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center">
+      <button className="relative inline-flex items-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center">
               Shiko më shumë
 
         <span className="text-lg">→</span>
