@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-
+import React from "react";
 function Pagination({ totalPages, currentPage, onPageChange }) {
   const getPageNumbers = () => {
     const pages = [];
