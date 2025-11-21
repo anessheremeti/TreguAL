@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { categories, colors } from "../data/products";
-
+import React from "react";
 function FilterSidebar({
   selectedCategories,
   setSelectedCategories,

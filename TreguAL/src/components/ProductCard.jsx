@@ -1,5 +1,5 @@
 import { Star, ShoppingCart } from "lucide-react";
-
+import React from "react";
 function ProductCard({ product }) {
   const renderStars = (rating) => {
     return Array.from({ length: 5 }).map((_, i) => (

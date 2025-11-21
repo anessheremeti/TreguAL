@@ -3,7 +3,7 @@ import ProductGrid from "../components/ProductGrid";
 import FilterSidebar from "../components/FilterSidebar";
 import Pagination from "../components/Pagination";
 import { productsData } from "../data/products";
-
+import React from "react";
 function ProductCatalog() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
