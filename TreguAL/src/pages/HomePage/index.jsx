@@ -1,4 +1,4 @@
-import Navbar from "../Navbar/index";
+import Navbar from "../../components/Navbar/index";
 import React from "react";
 import shopbag from "../../assets/Give Shop.png";
 import mouse from "../../assets/245b92b43d3cf7e3455d868c53712c92017165b2.jpg";
@@ -11,7 +11,7 @@ import monitor from '../../assets/a0af9d63deb24888bacceed0133091cd21da1c82.png';
 import man from '../../assets/Dono da proposta.png'
 import woman from '../../assets/Autor da proposta.png'
 import logo from "../../assets/8df3bd592c22da650b58b166b08590f8ca1cbb49.png";
-import Footer from "../Footer/index";
+import Footer from "../../components/Footer/index";
 const HomePage = () => {
   return (
     <div className="">
