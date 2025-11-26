@@ -10,11 +10,11 @@ import computer from "../../assets/4239312734fe89cb36e5ab2c79b5115290f126c5.png"
 import monitor from "../../assets/a0af9d63deb24888bacceed0133091cd21da1c82.png";
 import man from "../../assets/Dono da proposta.png";
 import woman from "../../assets/Autor da proposta.png";
-// import logo from "../../assets/8df3bd592c22da650b58b166b08590f8ca1cbb49.png";
 import Footer from "../../components/Footer/index";
+
 const HomePage = () => {
   return (
-    <div className="">
+    <div className="font-brand">
       <Navbar />
       <div className="first_section  w-full flex flex-col  mx-auto my-0 items-center justify-center pt-24">
         <div className="img_and_content flex text-center text-white">
@@ -22,7 +22,7 @@ const HomePage = () => {
             <img className="w-[40%]" src={shopbag} alt="shopbag" />
           </div>
           <div className="flex flex-col">
-            <p className="text-4xl">
+            <p className="text-4xl font-bold">
               Fuqizo Stilin Tënd të Jetës me Zgjedhje të Zgjuara
             </p>
             <p className="text-sm max-w-[50%] mx-auto mt-9">
@@ -31,64 +31,63 @@ const HomePage = () => {
               gjë që të duhet në një vend të vetëm.
             </p>
             <div className="pt-6">
-              <button className="border border- hover:cursor-pointer border-white py-2.5 px-11 ">
+              <button className="border border- hover:cursor-pointer border-white py-2.5 px-11 font-bold">
                 Shiko më shumë
               </button>
             </div>
           </div>
         </div>
-        <p className="text-white pt-24 text-3xl">Produktet e Javës</p>
+        <p className="text-white pt-24 text-3xl font-bold">Produktet e Javës</p>
         <p className="text-white pt-3.5 text-center">
-          {" "}
           Përzgjedhjet më të pëlqyera dhe më të kërkuara këtë javë. Zbulo
           ofertat që nuk duhen humbur!
         </p>
 
-        <div class="max-w-6xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-7">
-          <div class="bg-[#12132a] rounded-xl border-2  border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
-            <div class="w-full aspect-square overflow-hidden rounded-md mb-6">
+        <div className="max-w-6xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-7">
+          <div className="bg-[#12132a] rounded-xl border-2  border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
+            <div className="w-full aspect-square overflow-hidden rounded-md mb-6">
               <img
                 src={mouse}
                 alt="Logitech PRO X Mouse"
-                class="object-cover w-full h-full"
+                className="object-cover w-full h-full"
               />
             </div>
-            <p class="text-sm text-gray-300 text-center mb-2">
+            <p className="text-sm text-gray-300 text-center mb-2">
               Logitech PRO X Rechargeable Wireless
             </p>
-            <p class="text-lg font-semibold tracking-wide text-gray-100">
+            <p className="text-lg font-bold tracking-wide text-gray-100">
               $ 160.00
             </p>
           </div>
 
-          <div class="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
-            <div class="w-full aspect-square overflow-hidden rounded-md mb-6">
+          <div className="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
+            <div className="w-full aspect-square overflow-hidden rounded-md mb-6">
               <img
                 src={headphones}
                 alt="Logitech PRO X Headset"
-                class="object-cover w-full h-full"
+                className="object-cover w-full h-full"
               />
             </div>
-            <p class="text-sm text-gray-300 text-center mb-2">
+            <p className="text-sm text-gray-300 text-center mb-2">
               Logitech PRO X Gaming Headset
             </p>
-            <p class="text-lg font-semibold tracking-wide text-gray-100">
+            <p className="text-lg font-bold tracking-wide text-gray-100">
               $ 223.00
             </p>
           </div>
 
-          <div class="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
-            <div class="w-full aspect-square overflow-hidden rounded-md mb-6">
+          <div className="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
+            <div className="w-full aspect-square overflow-hidden rounded-md mb-6">
               <img
                 src={joystick}
                 alt="PS4 Controller"
-                class="object-cover w-full h-full"
+                className="object-cover w-full h-full"
               />
             </div>
-            <p class="text-sm text-gray-300 text-center mb-2">
+            <p className="text-sm text-gray-300 text-center mb-2">
               PS4 PlayStation 4 Dualshock Wireless Controller Black
             </p>
-            <p class="text-lg font-semibold tracking-wide text-emerald-400">
+            <p className="text-lg font-bold tracking-wide text-emerald-400">
               $ 79.00
             </p>
           </div>
@@ -100,7 +99,7 @@ const HomePage = () => {
           Blej me siguri, krahaso me lehtësi dhe përfito më shumë çdo ditë!
         </p>
         <div className="pt-6">
-          <button className="border hover:cursor-pointer text-white border-solid border-white py-2.5 px-11 ">
+          <button className="border hover:cursor-pointer text-white border-solid border-white py-2.5 px-11 font-bold">
             Shiko
           </button>
         </div>
@@ -119,7 +118,7 @@ const HomePage = () => {
               të jetesës. Modele ergonomike, materiale cilësore dhe dizajn
               modern që e kthejnë çdo hapësirë në një ambient komod dhe elegant.
             </p>
-            <button className="inline-flex items-center justify-center hover:cursor-pointer gap-2 border border-gray-400 text-gray-100 px-8 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400">
+            <button className="inline-flex items-center justify-center hover:cursor-pointer gap-2 border border-gray-400 text-gray-100 px-8 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 font-bold">
               Shiko me shume
               <span className="text-lg">→</span>
             </button>
@@ -152,7 +151,7 @@ const HomePage = () => {
               sofistikuar. Krijo hapësirën tënde perfekte me tavolina që
               përshtaten me ritmin tënd.
             </p>
-            <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center">
+            <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center font-bold">
               Shiko më shumë
               <span className="text-lg">→</span>
             </button>
@@ -161,7 +160,7 @@ const HomePage = () => {
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl w-full mx-auto ">
           <div className="flex flex-col justify-center lg:pr-10 order-2 lg:order-1">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight ">
               Ndriço ambientin me elegancë moderne
             </h2>
             <p className="text-gray-300 mb-8 max-w-md leading-relaxed">
@@ -170,13 +169,13 @@ const HomePage = () => {
               produkt është zgjedhur për të përmirësuar ndjesinë dhe komoditetin
               në çdo hapësirë.
             </p>
-            <button className="relative inline-flex items-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center">
+            <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center font-bold">
               Shiko më shumë
               <span className="text-lg">→</span>
             </button>
           </div>
 
-          <div className="relative rounded-2xl p-[3px] bg-linear-to-tr from-[#8b5cf6] via-[#7c3aed] to-[#06b6d4] shadow-[0_0_35px_rgba(139,92,246,0.4)] transition-transform duration-500 hover:scale-[1.02] order-1 lg:order-2">
+          <div className="relative rounded-2xl p-[3px] bg-linear-to-tr from-[#8b5cf6] via-[#7c3aed] to-[#06b6d4] shadow-[0_0_35px_rgba(139,92,246,0.4)] transition-transform duration-500 hover-scale-[1.02] order-1 lg:order-2">
             <img
               src={monitor}
               alt="Lamp setup"
@@ -186,7 +185,7 @@ const HomePage = () => {
         </div>
       </div>
       <section className="bg-black  p-5">
-        <p className="text-white text-2xl text-center">
+        <p className="text-white font-brand font-bold text-2xl text-center">
           Bli thjeshtë, shpejt dhe me besim – gjithçka që kërkon në një vend.”
         </p>
       </section>
@@ -200,9 +199,6 @@ const HomePage = () => {
         <div className="relative z-10 container mx-auto px-4 py-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
           <div className="w-full lg:w-[55%] flex justify-center lg:justify-start">
             <div className="relative w-full max-w-xl p-4 sm:p-8">
-              <div className="absolute top-0 left-0 w-[95%] h-[95%] border-l-2 border-t-2 border-fuchsia-500/50 rounded-tl-3xl shadow-[0_0_20px_rgba(192,38,211,0.3)]"></div>
-              <div className="absolute bottom-0 right-0 w-[95%] h-[95%] border-b-2 border-r-2 border-fuchsia-500/50 rounded-br-3xl shadow-[0_0_20px_rgba(192,38,211,0.3)]"></div>
-
               <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
                 <span className="text-[10rem] lg:text-[12rem] font-black text-white/5 select-none -translate-x-4 tracking-widest">
                   arado
@@ -210,7 +206,7 @@ const HomePage = () => {
               </div>
 
               <div className="relative z-10 space-y-6 text-left">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-light tracking-tight text-gray-100">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-gray-100">
                   Çoje përvojën tënde të blerjes në një
                 </h1>
                 <h2 className="text-5xl sm:text-6xl md:text-8xl font-extrabold uppercase tracking-tighter">
@@ -259,4 +255,5 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;

@@ -9,23 +9,19 @@ const Navbar = () => {
   return (
     <>
       <nav className="bg-black px-6 py-5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+         <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-          <img
-            src={pageLogo}
-            alt="Logo"
-            className="h-12 w-auto cursor-pointer"
-          />
+          <div className=" font-brand font-bold text-sky-600">Tregu AL</div>
 
           <ul className="hidden md:flex items-center gap-8 text-white text-[16px] font-medium">
-            <li className="cursor-pointer hover:text-gray-300 transition">Home</li>
-            <li className="cursor-pointer hover:text-gray-300 transition">E-shop</li>
-            <li className="cursor-pointer hover:text-gray-300 transition">Rreth Nesh</li>
-            <li className="cursor-pointer hover:text-gray-300 transition">Blog</li>
+            <li className="cursor-pointer  font-brand font-bold hover:text-gray-300 transition">Home</li>
+            <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">E-shop</li>
+            <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">Rreth Nesh</li>
+            <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">Blog</li>
           </ul>
 
           <div className="flex items-center gap-5">
-            <button className="flex items-center gap-2 text-white hover:text-gray-300 transition">
+            <button className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition">
               <i className="fa-solid fa-right-to-bracket"></i>
               Login
             </button>
