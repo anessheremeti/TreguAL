@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import pageLogo from "../../assets/8df3bd592c22da650b58b166b08590f8ca1cbb49.png";
 import burger from "../../assets/Frame 1.png";
-
+import {Link} from "react-router-dom";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
@@ -14,18 +14,19 @@ const Navbar = () => {
           <div className=" font-brand font-bold text-sky-600">Tregu AL</div>
 
           <ul className="hidden md:flex items-center gap-8 text-white text-[16px] font-medium">
-            <li className="cursor-pointer  font-brand font-bold hover:text-gray-300 transition">Home</li>
-            <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">E-shop</li>
+            <Link  to="/">             <li className="cursor-pointer  font-brand font-bold hover:text-gray-300 transition">Home</li></Link>
+            <Link to="/e-shop">            <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">E-shop</li></Link>
             <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">Rreth Nesh</li>
             <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">Blog</li>
           </ul>
 
           <div className="flex items-center gap-5">
-            <button className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition">
+            <Link to="/login">
+                <button className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition">
               <i className="fa-solid fa-right-to-bracket"></i>
               Login
             </button>
-
+            </Link>
             <img
               src={burger}
               alt="burger"
