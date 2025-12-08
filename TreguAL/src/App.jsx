@@ -6,6 +6,7 @@ import {  Routes, Route } from "react-router";
 import EShop from "./pages/E-Shop";
 import AddItemScreen from "./pages/AddItemScreen";
 import Login from "./pages/Login";
+import MyPostsPage from "./pages/MyPostsList";
 function App() {
   return (
     <>
@@ -14,6 +15,7 @@ function App() {
       <Route path="/product" element={<Product />} />
       <Route path="/addItemScreen" element={<AddItemScreen />} />
       <Route path="/e-shop" element={<EShop />} />
+      <Route path="/my-posts" element={<MyPostsPage />} />
       <Route path="/login" element={<Login />} />
     </Routes>
     </>
