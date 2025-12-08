@@ -81,7 +81,7 @@ Platforma jonë ofron shpejtësi, siguri dhe transparencë në çdo transaksion.
             <h3 className="text-base font-bold text-gray-500 tracking-widest mb-4">Na kontaktoni</h3>
              <ul className="space-y-3 text-sm text-white">
               <li>+1 891 989-11-91</li>
-              <li>hello@paradox.com</li>
+              <li>hello@TreguAL.com</li>
             </ul>
           </div>
         </div>
