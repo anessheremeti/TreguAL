@@ -1,7 +1,7 @@
 import React from "react";
 import BannerImage from "../../assets/AboutUsImage.png"; 
-import Footer from "../Footer/index";
-import Navbar from "../Navbar/index";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import AboutUsvideo from "../../assets/AboutUsvideo.mp4";
 
 

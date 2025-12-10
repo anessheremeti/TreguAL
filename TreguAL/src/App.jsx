@@ -6,6 +6,8 @@ import { Routes, Route } from "react-router";
 import EShop from "./pages/E-Shop";
 import AddItemScreen from "./pages/AddItemScreen";
 import Login from "./pages/Login";
+import Sidebar from "./pages/Sidebar";
+import DashboardAdmin from "./pages/DashboardAdmin";
 import MyPostsPage from "./pages/MyPostsList";
 import Blog from "./pages/Blog";
 function App() {
@@ -18,6 +20,9 @@ function App() {
       <Route path="/e-shop" element={<EShop />} />
       <Route path="/my-posts" element={<MyPostsPage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/sidebar" element={<Sidebar />} />
+      <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+
       <Route path="/blog" element={<Blog />} />
     </Routes>
     </>
