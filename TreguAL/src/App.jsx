@@ -2,11 +2,12 @@ import "./App.css";
 import React from "react";
 import HomePage from "./pages/HomePage/index";
 import Product from "./pages/Product";
-import {  Routes, Route } from "react-router";
+import { Routes, Route } from "react-router";
 import EShop from "./pages/E-Shop";
 import AddItemScreen from "./pages/AddItemScreen";
 import Login from "./pages/Login";
 import MyPostsPage from "./pages/MyPostsList";
+import Blog from "./pages/Blog";
 function App() {
   return (
     <>
@@ -17,6 +18,7 @@ function App() {
       <Route path="/e-shop" element={<EShop />} />
       <Route path="/my-posts" element={<MyPostsPage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/blog" element={<Blog />} />
     </Routes>
     </>
   );
