@@ -1,3 +1,6 @@
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+
 import React, { useState, useEffect, useRef } from "react";
 
 export default function CreateListingPage() {
@@ -210,6 +213,8 @@ if (form.price && Number(form.price) < 0)
   // ======================================
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-soft-dark text-white">
       <div className="max-w-4xl mx-auto px-6 py-8">
         <h1 className="text-3xl font-bold mb-8">Krijo Shpallje të Re</h1>
@@ -394,5 +399,7 @@ if (form.price && Number(form.price) < 0)
         </form>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }
