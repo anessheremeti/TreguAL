@@ -25,14 +25,16 @@ const Navbar = () => {
                 Home
               </li>
             </Link>
-            <Link to="/e-shop">
+            <Link to="/product">
               <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">
-                E-shop
+                Products
               </li>
             </Link>
-            <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">
-              Rreth Nesh
-            </li>
+            <Link to="/aboutus">
+              <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">
+                Rreth Nesh
+              </li>
+            </Link>
             <Link to="/blog">
               <li className="cursor-pointer font-brand font-bold hover:text-gray-300 transition">
                 Blog

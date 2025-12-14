@@ -10,21 +10,23 @@ import Sidebar from "./pages/Sidebar";
 import DashboardAdmin from "./pages/DashboardAdmin";
 import MyPostsPage from "./pages/MyPostsList";
 import Blog from "./pages/Blog";
+import AboutUs from "./pages/AboutUs";
 function App() {
   return (
     <>
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/product" element={<Product />} />
-      <Route path="/addItemScreen" element={<AddItemScreen />} />
-      <Route path="/e-shop" element={<EShop />} />
-      <Route path="/my-posts" element={<MyPostsPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/sidebar" element={<Sidebar />} />
-      <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
-
-      <Route path="/blog" element={<Blog />} />
-    </Routes>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/product" element={<Product />} />
+        <Route path="/addItemScreen" element={<AddItemScreen />} />
+        {/* <Route path="/e-shop" element={<EShop />} /> */}
+        <Route path="/my-posts" element={<MyPostsPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/sidebar" element={<Sidebar />} />
+        <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+        <Route path="aboutus" element={<AboutUs />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/product" element={<Product />} />
+      </Routes>
     </>
   );
 }
