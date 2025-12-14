@@ -4,6 +4,8 @@ import FilterSidebar from "../components/FilterSidebar";
 import Pagination from "../components/Pagination";
 import { productsData } from "../data/products";
 import React from "react";
+import Navbar from "./../components/Navbar/index";
+import Footer from "./../components/Footer/index";
 function ProductCatalog() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
@@ -38,6 +40,7 @@ function ProductCatalog() {
 
   return (
     <div className="min-h-screen bg-slate-900">
+      <Navbar />
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <p className="text-gray-400 text-sm">Showing 1 of 57 results</p>
@@ -88,6 +91,7 @@ function ProductCatalog() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
