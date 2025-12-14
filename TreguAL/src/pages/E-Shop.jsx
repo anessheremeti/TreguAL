@@ -17,11 +17,8 @@ const Eshop = () => {
       <Navbar />
 
       <div className="container mx-auto px-6 lg:px-20 py-24">
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-
           <div className="flex gap-8">
-
             <div className="flex flex-col gap-4">
               {images.map((img, i) => (
                 <img
@@ -30,7 +27,11 @@ const Eshop = () => {
                   alt="thumb"
                   onClick={() => setActiveImage(img)}
                   className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border 
-                    ${activeImage === img ? "border-blue-500 shadow-lg" : "border-transparent opacity-70 hover:opacity-100"}`}
+                    ${
+                      activeImage === img
+                        ? "border-blue-500 shadow-lg"
+                        : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
                 />
               ))}
             </div>
@@ -45,34 +46,29 @@ const Eshop = () => {
           </div>
 
           <div className="max-w-xl space-y-8">
-
             <h1 className="text-3xl lg:text-4xl font-semibold leading-tight">
               Logitech PRO X Rechargeable Wireless
             </h1>
 
             <div className="flex items-center gap-2">
-              {[1,2,3,4,5].map((_, i) => (
-                <span key={i} className="text-yellow-400 text-xl">★</span>
+              {[1, 2, 3, 4, 5].map((_, i) => (
+                <span key={i} className="text-yellow-400 text-xl">
+                  ★
+                </span>
               ))}
               <span className="text-sm opacity-70">(top)</span>
             </div>
 
-           
-
             <p className="opacity-75 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-              Enim et volutpat lobortis enim donec adipiscing nibh.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim et
+              volutpat lobortis enim donec adipiscing nibh.
             </p>
 
             <div className="flex items-center gap-4">
-             
-
               <button className="bg-blue-600 hover:bg-blue-500 transition px-8 py-3 rounded-lg font-medium shadow-lg">
                 Kontakto Shitësin
               </button>
             </div>
-
-
 
             <p className="text-sm opacity-80">Sku: 02</p>
             <p className="text-sm opacity-80">
@@ -97,11 +93,9 @@ const Eshop = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               Consectetur in ac elementum aliquam imperdiet tellus.
             </p>
-
           </div>
-       
         </div>
-           <RelatedProducts />
+        <RelatedProducts />
       </div>
 
       <Footer />
