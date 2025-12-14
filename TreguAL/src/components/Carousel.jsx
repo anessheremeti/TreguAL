@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
-
-const Carousel = ({ items }) => {
+import { Link,useParams } from "react-router-dom";
+const Carousel = ({ products = [] }) => {
+  const {productId} = useParams();
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -48,17 +49,15 @@ const Carousel = ({ items }) => {
           snap-x snap-mandatory pb-5 no-scrollbar
         "
       >
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="snap-start shrink-0 w-[220px]" 
-          >
-            <ProductCard product={item} />
-            {console.log("ITEM FROM CAROUSEL:", item)}
+     {Array.isArray(products) &&
+  products.map((item) => (
+    <div key={item.id} className="snap-start shrink-0 w-[220px]">
+      <Link to={`/product-details/${item.id}`}>
+        <ProductCard product={item} />
+      </Link>
+    </div>
+))}
 
-          </div>
-          
-        ))}
         
       </div>
 

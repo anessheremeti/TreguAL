@@ -18,7 +18,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/product" element={<Product />} />
         <Route path="/addItemScreen" element={<AddItemScreen />} />
-        {/* <Route path="/e-shop" element={<EShop />} /> */}
+         <Route path="/product-details/:productId" element={<EShop />} /> 
         <Route path="/my-posts" element={<MyPostsPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sidebar" element={<Sidebar />} />
