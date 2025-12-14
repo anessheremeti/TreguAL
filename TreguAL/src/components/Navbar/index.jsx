@@ -12,7 +12,11 @@ const Navbar = () => {
       <nav className="bg-black px-6 py-5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo/Titulli */}
-          <div className="font-brand font-bold text-sky-600">Tregu AL</div>
+          <Link to="/">
+            <div className="font-brand font-bold text-sky-600 ...">
+              Tregu AL
+            </div>
+          </Link>
 
           {/* Navigimi për Desktop */}
           <ul className="hidden md:flex items-center gap-8 text-white text-[16px] font-medium">
