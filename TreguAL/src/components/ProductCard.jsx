@@ -28,7 +28,7 @@ function ProductCard({ product }) {
           src={image}
           alt={name}
           className="
-            w-full h-full object-contain 
+            w-full h-full object-cover 
             group-hover:scale-105 
             transition-transform duration-300
           "

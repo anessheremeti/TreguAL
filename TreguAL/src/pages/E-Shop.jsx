@@ -7,11 +7,23 @@ import img3 from "../assets/3.webp";
 import img4 from "../assets/4.webp";
 import img5 from "../assets/5.webp";
 import RelatedProducts from "./RelatedProducts";
+import { productsData } from "../data/products";
+import {useParams} from 'react-router-dom';
 
 const Eshop = () => {
   const images = [img1, img2, img3, img4, img5];
   const [activeImage, setActiveImage] = useState(img1);
+  const {productId} = useParams();
+  const [product, setProduct] = useState(null);
+const relatedProducts = productsData.filter(
+  (p) => p.category === product?.category && p.id !== product?.id
+);
 
+    let prod;
+  React.useEffect(() => {
+     prod = productsData.find(p => p.id === parseInt(productId));
+    setProduct(prod);
+  }, [productId]);
   return (
     <div className="font-brand bg-[#0D0F1A] text-white min-h-screen">
       <Navbar />
@@ -23,10 +35,10 @@ const Eshop = () => {
           <div className="flex gap-8">
 
             <div className="flex flex-col gap-4">
-              {images.map((img, i) => (
+              {prod?.map((img, i) => (
                 <img
                   key={i}
-                  src={img}
+                  src={product ? product.image : img1}
                   alt="thumb"
                   onClick={() => setActiveImage(img)}
                   className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border 
@@ -35,9 +47,9 @@ const Eshop = () => {
               ))}
             </div>
 
-            <div className="bg-white/5 rounded-xl p-6 flex items-center justify-center shadow-lg">
+            <div className="bg-white/5 rounded-xl p-6 flex items-center justify-center shadow-lg w-[450px] h-[37rem] ">
               <img
-                src={activeImage}
+                src={product ? product.image : img1}
                 className="w-[450px] h-[450px] object-contain"
                 alt="main"
               />
@@ -47,7 +59,7 @@ const Eshop = () => {
           <div className="max-w-xl space-y-8">
 
             <h1 className="text-3xl lg:text-4xl font-semibold leading-tight">
-              Logitech PRO X Rechargeable Wireless
+              {product ? product.name : 'Loading...'}
             </h1>
 
             <div className="flex items-center gap-2">
@@ -60,8 +72,7 @@ const Eshop = () => {
            
 
             <p className="opacity-75 leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-              Enim et volutpat lobortis enim donec adipiscing nibh.
+              {product ? product.description : 'Loading...'}
             </p>
 
             <div className="flex items-center gap-4">
@@ -76,7 +87,7 @@ const Eshop = () => {
 
             <p className="text-sm opacity-80">Sku: 02</p>
             <p className="text-sm opacity-80">
-              Kategoria: <span className="font-semibold">Mouse</span>
+              Kategoria: <span className="font-semibold">{product ? product.category : 'Loading...'}</span>
             </p>
 
             <div className="mt-6 border-b border-white/10">
@@ -94,14 +105,14 @@ const Eshop = () => {
             </div>
 
             <p className="opacity-80 leading-relaxed pt-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Consectetur in ac elementum aliquam imperdiet tellus.
+             {product ? product.description : 'Loading...'}
             </p>
 
           </div>
        
         </div>
-           <RelatedProducts />
+        
+           <RelatedProducts products={relatedProducts} />
       </div>
 
       <Footer />

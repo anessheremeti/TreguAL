@@ -1,3 +1,15 @@
+
+
+import img1 from "../assets/1.webp";
+import img2 from "../assets/2.webp";
+import img3 from "../assets/3.webp";
+import img4 from "../assets/4.webp";
+import img5 from "../assets/5.webp";
+import headset from "../assets/pro-headset-gallery-1.webp";
+import mouse from "../assets/61oE1NouXuL._AC_SX466_-removebg-preview.png";
+import pinkHeadset from "../assets/91fadda1-6a3d-4eb4-a772-01e8ddb836d0-removebg-preview.png";
+import pinkKeyboard from "../assets/71vruZcMudL._AC_SY300_SX300_QL70_FMwebp_-removebg-preview.png";
+
 export const productsData = [
   {
     id: 1,
@@ -6,8 +18,8 @@ export const productsData = [
     color: "Black",
     price: 160,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Professional-grade wireless gaming mouse with ultra-low latency, HERO sensor precision, and a lightweight rechargeable design built for esports performance.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 2,
@@ -16,8 +28,8 @@ export const productsData = [
     color: "Blue",
     price: 73,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Compact and responsive gaming mouse featuring LIGHTSYNC RGB lighting, precise tracking, and an ergonomic shape for long gaming sessions.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 3,
@@ -26,8 +38,8 @@ export const productsData = [
     color: "Grey",
     price: 119,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Advanced productivity mouse with ultra-quiet clicks, MagSpeed scrolling, and ergonomic comfort designed for creators and professionals.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 4,
@@ -36,8 +48,8 @@ export const productsData = [
     color: "Black",
     price: 240,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Wireless esports headset delivering immersive surround sound, Blue VO!CE microphone technology, and long-lasting comfort for competitive play.",
+    image: "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 5,
@@ -46,8 +58,8 @@ export const productsData = [
     color: "Pink",
     price: 199,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Stylish wireless gaming headset with LIGHTSPEED connectivity, customizable RGB lighting, and crystal-clear audio for immersive gaming.",
+    image: "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 6,
@@ -56,8 +68,8 @@ export const productsData = [
     color: "Black",
     price: 150,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Dual-chamber driver headset designed to reduce distortion, offering rich sound clarity and durable aluminum construction.",
+    image: "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 7,
@@ -66,8 +78,8 @@ export const productsData = [
     color: "Pink",
     price: 160,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Tenkeyless wireless mechanical keyboard built for esports, delivering fast response times and customizable RGB in a compact layout.",
+    image: "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 8,
@@ -76,8 +88,8 @@ export const productsData = [
     color: "Black",
     price: 99,
     rating: 4,
-    image:
-      "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Tournament-ready mechanical keyboard featuring tactile switches, durable construction, and consistent performance under pressure.",
+    image: "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 9,
@@ -86,8 +98,8 @@ export const productsData = [
     color: "Grey",
     price: 149,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Wireless LIGHTSPEED gaming keyboard with hot-swappable switches and a compact TKL design for professional gamers.",
+    image: "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 10,
@@ -96,8 +108,8 @@ export const productsData = [
     color: "Black",
     price: 89,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "High-performance gaming mouse with aggressive design, customizable DPI, and precise tracking for competitive gaming.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 11,
@@ -106,8 +118,8 @@ export const productsData = [
     color: "Black",
     price: 129,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Ultra-lightweight wireless mouse engineered for esports professionals with optical magnetic switches and flawless tracking.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 12,
@@ -116,8 +128,8 @@ export const productsData = [
     color: "Black",
     price: 69,
     rating: 4,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Iconic ergonomic gaming mouse redesigned with a lighter frame and improved sensor accuracy for competitive play.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 13,
@@ -126,8 +138,8 @@ export const productsData = [
     color: "Black",
     price: 79,
     rating: 4,
-    image:
-      "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Lightweight gaming headset offering clear audio, swivel-to-mute microphone, and comfort for extended gaming sessions.",
+    image: "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 14,
@@ -136,8 +148,8 @@ export const productsData = [
     color: "Black",
     price: 349,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Premium gaming headset with high-fidelity audio, active noise cancellation, and studio-grade sound customization.",
+    image: "https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 15,
@@ -146,8 +158,8 @@ export const productsData = [
     color: "Black",
     price: 199,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "High-end mechanical keyboard with dedicated macro keys, aluminum frame, and dynamic RGB lighting control.",
+    image: "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 16,
@@ -156,8 +168,8 @@ export const productsData = [
     color: "Black",
     price: 179,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Mechanical gaming keyboard featuring Razer switches, per-key RGB lighting, and a robust build for intense gameplay.",
+    image: "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 17,
@@ -166,8 +178,8 @@ export const productsData = [
     color: "Black",
     price: 149,
     rating: 4,
-    image:
-      "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Durable mechanical keyboard with pudding keycaps, vibrant RGB lighting, and a solid steel frame.",
+    image: "https://images.pexels.com/photos/4195325/pexels-photo-4195325.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 18,
@@ -176,8 +188,8 @@ export const productsData = [
     color: "Black",
     price: 79,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Highly customizable gaming mouse with HERO sensor, adjustable weights, and programmable buttons.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 19,
@@ -186,8 +198,8 @@ export const productsData = [
     color: "Black",
     price: 49,
     rating: 4,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Versatile gaming mouse with multiple programmable buttons and balanced performance for FPS and MOBA games.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
   {
     id: 20,
@@ -196,10 +208,62 @@ export const productsData = [
     color: "Black",
     price: 79,
     rating: 5,
-    image:
-      "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description: "Precision FPS gaming mouse with tunable weight system, optical switches, and high-DPI sensor accuracy.",
+    image: "https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg?auto=compress&cs=tinysrgb&w=400",
   },
+  {
+    id: 21,
+    name: "Logitech PRO X Rechargeable Wireless",
+    category: "Mouse",
+    color: "Black",
+    price: 150,
+    rating: 5,
+    description: "Elite wireless gaming mouse offering professional-level performance, long battery life, and ultra-light construction.",
+    image: img1,
+  },
+  {
+  id: 22,
+  name: "Logitech G Pro X Wireless Gaming Headset",
+  category: "Headset",
+  color: "Black",
+  price: 240,
+  rating: 5,
+  description: "Professional wireless gaming headset engineered for esports, featuring LIGHTSPEED connectivity, Blue VO!CE microphone technology, and immersive surround sound.",
+  image: headset,
+},
+{
+  id: 23,
+  name: "Logitech G203 LIGHTSYNC",
+  category: "Mouse",
+  color: "Black",
+  price: 73,
+  rating: 4,
+  description: "Affordable and responsive gaming mouse with LIGHTSYNC RGB lighting, accurate sensor performance, and a compact ergonomic design.",
+  image: mouse,
+},
+{
+  id: 24,
+  name: "Logitech G PRO Mechanical Gaming Keyboard",
+  category: "Keyboard",
+  color: "Black",
+  price: 99,
+  rating: 4,
+  description: "Tournament-grade mechanical keyboard built for precision and durability, offering fast actuation switches and a minimalist professional layout.",
+  image: pinkHeadset,
+},
+{
+  id: 25,
+  name: "Logitech G PRO X TKL Wireless Mech Gaming Keyboard Pink",
+  category: "Keyboard",
+  color: "Pink",
+  price: 160,
+  rating: 4,
+  description: "Compact tenkeyless wireless mechanical keyboard designed for competitive gaming, combining LIGHTSPEED performance with a stylish pink finish.",
+  image: pinkKeyboard,
+}
+
 ];
+
 
 export const categories = [
   { name: "Acer", count: 25 },
