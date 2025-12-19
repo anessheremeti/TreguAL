@@ -4,7 +4,7 @@ import React from "react";
 function ProductCard({ product }) {
   if (!product) return null;
 
-  const { name, image, rating = 0, price = "—" } = product;
+  const { title, images, rating = 0, price } = product;
 
   const renderStars = () => {
     return Array.from({ length: 5 }).map((_, i) => (
@@ -25,7 +25,7 @@ function ProductCard({ product }) {
       
       <div className="relative bg-white h-48 sm:h-56 flex items-center justify-center overflow-hidden">
         <img
-          src={image}
+          src={images?.map(image => image.imageUrl)[0]}
           alt={name}
           className="
             w-full h-full object-cover 
@@ -38,7 +38,7 @@ function ProductCard({ product }) {
 
       <div className="p-4">
         <h3 className="text-white font-semibold text-sm sm:text-base mb-3 line-clamp-2 min-h-[40px]">
-          {name}
+          {title}
         </h3>
 
         <div className="flex items-center gap-1 mb-4">{renderStars()}</div>
@@ -46,7 +46,7 @@ function ProductCard({ product }) {
         {/* Price + Cart */}
         <div className="flex items-center justify-between">
           <span className="text-yellow-400 font-bold text-lg">
-            ${price}
+          {price ? `$${price}` : 'Cmimi sipas marrveshjes'}
           </span>
 
           <button
