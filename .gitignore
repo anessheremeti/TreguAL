@@ -1,0 +1,38 @@
+# =========================
+# .NET build artifacts
+# =========================
+**/bin/
+**/obj/
+
+# =========================
+# Visual Studio / VS Code
+# =========================
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# =========================
+# User / OS
+# =========================
+*.user
+*.suo
+*.rsuser
+*.log
+*.tmp
+*.env
+# Local .NET secrets
+appsettings.Development.json
+
+# =========================
+# Node / React
+# =========================
+node_modules/
+dist/
+build/
+
+# =========================
+# Test / coverage
+# =========================
+coverage/
