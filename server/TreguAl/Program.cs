@@ -5,6 +5,7 @@ using HelloWorld.Interfaces;
 using HelloWorld.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
