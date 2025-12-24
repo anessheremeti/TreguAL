@@ -4,7 +4,7 @@ using HelloWorld.Services.Interfaces;
 namespace HelloWorld.Controllers
 {
     [ApiController]
-    [Route("api/posts")] // Kjo mbetet kështu sepse React e kërkon këtë rrugë
+    [Route("api/posts")]
     public class FeaturedController : ControllerBase
     {
         private readonly IHomeManager _homeManager;
