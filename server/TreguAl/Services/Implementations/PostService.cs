@@ -16,9 +16,9 @@ public class PostService : IPostService
 
     private MySqlConnection Conn() => new(_cs);
 
-  public async Task<IEnumerable<Post>> GetAllAsync()
-{
-    const string sql = @"
+    public async Task<IEnumerable<Post>> GetAllAsync()
+    {
+        const string sql = @"
         SELECT
             post_id AS PostId,
             user_id AS UserId,
@@ -33,13 +33,13 @@ public class PostService : IPostService
         WHERE status = 'active'
     ";
 
-    using var db = Conn();
-    var posts = (await db.QueryAsync<Post>(sql)).ToList();
+        using var db = Conn();
+        var posts = (await db.QueryAsync<Post>(sql)).ToList();
 
-    if (!posts.Any())
-        return posts;
+        if (!posts.Any())
+            return posts;
 
-    const string imgSql = @"
+        const string imgSql = @"
         SELECT
             post_image_id AS PostImageId,
             post_id AS PostId,
@@ -49,27 +49,27 @@ public class PostService : IPostService
         WHERE post_id IN @PostIds
     ";
 
-    var images = await db.QueryAsync<PostImage>(
-        imgSql,
-        new { PostIds = posts.Select(p => p.PostId).ToArray() }
-    );
+        var images = await db.QueryAsync<PostImage>(
+            imgSql,
+            new { PostIds = posts.Select(p => p.PostId).ToArray() }
+        );
 
-    var imagesByPost = images.GroupBy(i => i.PostId)
-                             .ToDictionary(g => g.Key, g => g.ToList());
+        var imagesByPost = images.GroupBy(i => i.PostId)
+                                 .ToDictionary(g => g.Key, g => g.ToList());
 
-    foreach (var post in posts)
-    {
-        if (imagesByPost.TryGetValue(post.PostId, out var imgs))
-            post.Images = imgs;
+        foreach (var post in posts)
+        {
+            if (imagesByPost.TryGetValue(post.PostId, out var imgs))
+                post.Images = imgs;
+        }
+
+        return posts;
     }
-
-    return posts;
-}
 
 
     public async Task<Post?> GetByIdAsync(uint postId)
-{
-    const string sql = @"
+    {
+        const string sql = @"
         SELECT
             post_id AS PostId,
             user_id AS UserId,
@@ -85,13 +85,13 @@ public class PostService : IPostService
         LIMIT 1
     ";
 
-    using var db = Conn();
+        using var db = Conn();
 
-    var post = await db.QuerySingleOrDefaultAsync<Post>(sql, new { postId });
-    if (post == null)
-        return null;
+        var post = await db.QuerySingleOrDefaultAsync<Post>(sql, new { postId });
+        if (post == null)
+            return null;
 
-    const string imgSql = @"
+        const string imgSql = @"
         SELECT
             post_image_id AS PostImageId,
             post_id AS PostId,
@@ -101,11 +101,11 @@ public class PostService : IPostService
         WHERE post_id = @postId
     ";
 
-    var images = await db.QueryAsync<PostImage>(imgSql, new { postId });
-    post.Images = images.ToList();
+        var images = await db.QueryAsync<PostImage>(imgSql, new { postId });
+        post.Images = images.ToList();
 
-    return post;
-}
+        return post;
+    }
 
 
     public async Task<IEnumerable<Post>> GetByUserAsync(uint userId)
