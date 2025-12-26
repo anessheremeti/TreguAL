@@ -64,10 +64,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<DataDapper>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-/* =========================================================
- * Authentication (JWT)
- * ========================================================= */
+
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
