@@ -67,11 +67,10 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<DataDapper>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddScoped<IHomeManager, HomeManager>(); // SHTESE: Lidhja e managerit të ri
 
-/* =========================================================
- * Authentication (JWT)
- * ========================================================= */
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
