@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const validateEmail = (value) => {
     if (!value) return "Email is required";
@@ -37,17 +40,50 @@ export default function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
 
     setErrors({ email: emailError, password: passwordError });
-
     if (emailError || passwordError) return;
 
-    console.log("Form submitted", { email, password });
+    try {
+      const res = await fetch("http://localhost:5104/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Login failed");
+      }
+
+      // ✅ RUAN NE CACHE
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", String(data.userId));
+      localStorage.setItem("roleId", String(data.roleId));
+      localStorage.setItem("fullName", data.fullName);
+      localStorage.setItem("email", data.email);
+
+      // ✅ Redirect sipas rolit
+      const roleId = Number(data.roleId);
+
+      if (roleId === 4) {
+        // Admin
+        navigate("/dashboardAdmin");
+      } else {
+        // Role tjera
+        navigate("/product"); // ose ku don ti
+      }
+    } catch (err) {
+      setErrors((prev) => ({ ...prev, general: err.message }));
+    }
   };
 
   return (
@@ -90,7 +126,9 @@ export default function Login() {
             </a>
           </div>
 
-          {/* BUTTON */}
+          {/* GENERAL ERROR MESSAGE */}
+          {errors.general && <p className="text-red-400 text-sm">{errors.general}</p>}
+
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition"
@@ -101,7 +139,9 @@ export default function Login() {
 
         <p className="text-slate-300 text-center mt-6">
           Don’t have an account?{" "}
-          <a href="#" className="text-blue-400 hover:underline">Sign up</a>
+          <a href="http://localhost:5173/signup" className="text-blue-400 hover:underline">
+            Sign up
+          </a>
         </p>
       </div>
     </div>

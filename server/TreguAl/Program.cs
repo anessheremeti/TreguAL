@@ -22,6 +22,7 @@ builder.Configuration
  * Services
  * ========================================================= */
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 
 /* Swagger + JWT support */
 builder.Services.AddEndpointsApiExplorer();
@@ -74,7 +75,7 @@ var jwtAudience = builder.Configuration["Jwt:Audience"];
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = true;
+options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -91,7 +92,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", p => p.RequireClaim("role_id", "4"));
+    options.AddPolicy("BusinessOnly", p => p.RequireClaim("role_id", "3"));
+    options.AddPolicy("SellerOnly", p => p.RequireClaim("role_id", "2"));
+    options.AddPolicy("AnyLoggedIn", p => p.RequireAuthenticatedUser());
+});
+
 
 /* =========================================================
  * CORS (from config)
@@ -132,6 +140,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
 

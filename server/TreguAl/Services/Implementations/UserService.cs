@@ -4,6 +4,11 @@ using Domain.Entities;
 using HelloWorld.Data;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 
 namespace Application.Services
 {
@@ -15,6 +20,87 @@ namespace Application.Services
         {
             _db = db;
         }
+    public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+{
+    const string sql = @"
+        SELECT user_id AS UserId,
+               role_id AS RoleId,
+               full_name AS FullName,
+               email AS Email,
+               password_hash AS PasswordHash
+        FROM users
+        WHERE email = @Email
+        LIMIT 1;
+    ";
+
+    var user = await _db.LoadSingleAsync<LoginUserRow>(sql, new { Email = dto.Email });
+
+    if (user == null)
+        throw new Exception("Email ose password gabim");
+
+    var incomingHash = HashPassword(dto.Password); // SHA256 si create
+    if (incomingHash != user.PasswordHash)
+        throw new Exception("Email ose password gabim");
+
+    var token = GenerateJwtToken(user.UserId, user.RoleId, user.Email);
+
+    return new AuthResponseDto
+    {
+        Token = token,
+        UserId = user.UserId,
+        RoleId = user.RoleId,
+        FullName = user.FullName,
+        Email = user.Email
+    };
+}
+
+private sealed class LoginUserRow
+{
+    public uint UserId { get; set; }
+    public uint RoleId { get; set; }
+    public string FullName { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
+}
+
+private string GenerateJwtToken(uint userId, uint roleId, string email)
+{
+    // ✅ OPSIONI 2: lexon config pa DI
+    var config = new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+        .AddEnvironmentVariables()
+        .Build();
+
+    var key = config["Jwt:Key"];
+    var issuer = config["Jwt:Issuer"];
+    var audience = config["Jwt:Audience"];
+
+    if (string.IsNullOrWhiteSpace(key))
+        throw new Exception("Jwt:Key mungon ne appsettings.json");
+
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+        new Claim(ClaimTypes.Role, roleId.ToString()),
+        new Claim("role_id", roleId.ToString()),
+        new Claim(JwtRegisteredClaimNames.Email, email),
+    };
+
+    var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key));
+    var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+        issuer: issuer,
+        audience: audience,
+        claims: claims,
+        expires: DateTime.UtcNow.AddDays(1),
+        signingCredentials: creds
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}
 
         public async Task<UserDto> CreateAsync(CreateUserDto dto)
         {
