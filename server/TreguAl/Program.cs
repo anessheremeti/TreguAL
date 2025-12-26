@@ -3,6 +3,8 @@ using Application.Services;
 using HelloWorld.Data;
 using HelloWorld.Interfaces;
 using HelloWorld.Services;
+using HelloWorld.Services.Interfaces; // SHTESE
+using HelloWorld.Services.Implementations; // SHTESE
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -66,6 +68,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
+builder.Services.AddScoped<IHomeManager, HomeManager>(); // SHTESE: Lidhja e managerit të ri
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];

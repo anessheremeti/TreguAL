@@ -16,4 +16,6 @@ public interface IPostService
 
     Task<bool> AddImageAsync(uint postId, string imageUrl);
     Task<IEnumerable<PostImage>> GetImagesAsync(uint postId);
+
+    
 }
