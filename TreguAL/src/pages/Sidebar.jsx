@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({ setPage }) {
   const [open, setOpen] = useState(false); // default closed on mobile
   const [active, setActive] = useState("summary");
+
+  const navigate = useNavigate();
 
   const menu = [
     { id: "summary", label: "Summary Cards", icon: "fa-solid fa-chart-pie" },
@@ -11,7 +14,24 @@ export default function Sidebar({ setPage }) {
     { id: "ads", label: "Ads Management", icon: "fa-solid fa-bullhorn" },
     { id: "payments", label: "Payments", icon: "fa-solid fa-money-bill" },
     { id: "reviews", label: "Reviews", icon: "fa-solid fa-star" },
+    {
+      id: "logout",
+      label: "Logout",
+      icon: "fa-solid fa-right-from-bracket"
+    }
   ];
+
+  const handleLogout = () => {
+    // fshiji te dhenat e login
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("roleId");
+    localStorage.removeItem("fullName");
+    localStorage.removeItem("email");
+
+    setOpen(false); // mbylle sidebar ne mobile
+    navigate("/");  // shkon ne Home
+  };
 
   return (
     <>
@@ -23,7 +43,7 @@ export default function Sidebar({ setPage }) {
         <i className="fa-solid fa-bars"></i>
       </button>
 
-      {/* OVERLAY (visible only when open on mobile) */}
+      {/* OVERLAY (mobile) */}
       {open && (
         <div
           onClick={() => setOpen(false)}
@@ -53,12 +73,16 @@ export default function Sidebar({ setPage }) {
           {menu.map((item) => (
             <button
               key={item.id}
-            onClick={() => {
-   setActive(item.id);
-   setPage(item.id);
-   setOpen(false); // mbylle menynë në mobile
-}}
+              onClick={() => {
+                if (item.id === "logout") {
+                  handleLogout();
+                  return;
+                }
 
+                setActive(item.id);
+                setPage(item.id);
+                setOpen(false); // mbylle menynë në mobile
+              }}
               className={`
                 flex items-center py-3 px-4 rounded-xl transition-all gap-3
                 ${

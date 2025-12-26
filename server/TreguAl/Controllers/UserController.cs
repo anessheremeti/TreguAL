@@ -3,6 +3,8 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Application.DTOs;
+
 
 namespace API.Controllers
 {
@@ -23,6 +25,13 @@ namespace API.Controllers
             var result = await _userService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.UserId }, result);
         }
+        [HttpPost("login")]
+public async Task<IActionResult> Login([FromBody] LoginDto dto)
+{
+    var result = await _userService.LoginAsync(dto);
+    return Ok(result);
+}
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(uint id)

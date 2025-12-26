@@ -1,6 +1,10 @@
 using HelloWorld.Interfaces;
 using HelloWorld.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System;
+
 
 namespace HelloWorld.Controllers;
 
@@ -9,11 +13,66 @@ namespace HelloWorld.Controllers;
 public class PostsController : ControllerBase
 {
     private readonly IPostService _service;
+private readonly IWebHostEnvironment _env;
+ public PostsController(IPostService service, IWebHostEnvironment env)
+{
+    _service = service;
+    _env = env;
+}
+[Authorize]
+[HttpPost("create-with-images")]
+[RequestSizeLimit(50_000_000)]
+public async Task<IActionResult> CreateWithImages([FromForm] CreatePostFormDto dto)
+{
+    var userIdClaim = User.FindFirstValue("user_id")
+        ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (dto.CategoryId == 0)
+    return BadRequest("CategoryId është i detyrueshëm");
 
-    public PostsController(IPostService service)
+if (string.IsNullOrWhiteSpace(dto.PhoneNumber))
+    return BadRequest("PhoneNumber është i detyrueshëm");
+
+if (dto.Images.Count > 3)
+    return BadRequest("Maksimumi 3 foto për post");
+
+
+    if (!uint.TryParse(userIdClaim, out var userId))
+        return Unauthorized("Tokeni nuk ka user_id");
+
+    if (dto.Images == null || dto.Images.Count == 0)
+        return BadRequest("Duhet të ngarkosh të paktën 1 foto");
+
+    var post = new Post
     {
-        _service = service;
+        UserId = userId,
+        CategoryId = dto.CategoryId,
+        Title = dto.Title,
+        Description = dto.Description,
+        PhoneNumber = dto.PhoneNumber
+    };
+
+    var postId = await _service.CreateAsync(post);
+
+    var wwwroot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+    var folder = Path.Combine(wwwroot, "uploads", "posts", postId.ToString());
+    Directory.CreateDirectory(folder);
+
+    foreach (var file in dto.Images)
+    {
+        var ext = Path.GetExtension(file.FileName);
+        var fileName = $"{Guid.NewGuid():N}{ext}";
+        var fullPath = Path.Combine(folder, fileName);
+
+        using var stream = System.IO.File.Create(fullPath);
+        await file.CopyToAsync(stream);
+
+        var imageUrl = $"/uploads/posts/{postId}/{fileName}";
+        await _service.AddImageAsync(postId, imageUrl);
     }
+
+    return CreatedAtAction(nameof(Get), new { id = postId }, new { postId });
+}
+
 
     [HttpGet]
     public async Task<IActionResult> GetAll()

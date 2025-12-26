@@ -1,10 +1,43 @@
-import React, { useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import burger from "../../assets/Frame 1.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  // Kontrollo a eshte useri logged in (nga localStorage)
+  const checkAuth = () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    setIsLoggedIn(!!token && !!userId);
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    // nese localStorage ndryshon ne tab tjeter
+    const onStorage = () => checkAuth();
+    window.addEventListener("storage", onStorage);
+
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const handleLogout = () => {
+    // fshiji krejt ose vetem keto qe t'duhen
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("fullName");
+    localStorage.removeItem("roleId");
+
+    setIsLoggedIn(false);
+    setOpen(false);
+    navigate("/"); // ose "/" si t'dush
+  };
 
   return (
     <>
@@ -13,9 +46,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo/Titulli */}
           <Link to="/">
-            <div className="font-brand font-bold text-sky-600 ...">
-              Tregu AL
-            </div>
+            <div className="font-brand font-bold text-sky-600 ...">Tregu AL</div>
           </Link>
 
           {/* Navigimi për Desktop */}
@@ -42,14 +73,25 @@ const Navbar = () => {
             </Link>
           </ul>
 
-          {/* Butoni Login dhe Burger Icon */}
+          {/* Butoni Login/Logout dhe Burger Icon */}
           <div className="flex items-center gap-5">
-            <Link to="/login">
-              <button className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition">
-                <i className="fa-solid fa-right-to-bracket"></i>
-                Login
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition"
+              >
+                <i className="fa-solid fa-right-from-bracket"></i>
+                Logout
               </button>
-            </Link>
+            ) : (
+              <Link to="/login">
+                <button className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition">
+                  <i className="fa-solid fa-right-to-bracket"></i>
+                  Login
+                </button>
+              </Link>
+            )}
+
             <img
               src={burger}
               alt="burger"
@@ -73,7 +115,7 @@ const Navbar = () => {
               className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
             />
 
-            {/* Menuja Anësore - Me Link-a dhe mbyllje funksionale */}
+            {/* Menuja Anësore */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -81,7 +123,6 @@ const Navbar = () => {
               transition={{ type: "tween", duration: 0.3 }}
               className="fixed right-0 top-0 h-full w-64 bg-black/95 text-white z-50 p-6 shadow-xl flex flex-col gap-6"
             >
-              {/* Butoni Mbyll */}
               <button
                 className="text-right text-2xl mb-6 hover:text-gray-300 transition"
                 onClick={() => setOpen(false)}
@@ -89,29 +130,39 @@ const Navbar = () => {
                 ✕
               </button>
 
-              {/* Lidhjet e Menusë Mobile */}
               <ul className="flex flex-col gap-5 text-lg">
                 <Link to="/" onClick={() => setOpen(false)}>
-                  <li className="hover:text-gray-300 transition cursor-pointer">
-                    Home
-                  </li>
+                  <li className="hover:text-gray-300 transition cursor-pointer">Home</li>
                 </Link>
                 <Link to="/e-shop" onClick={() => setOpen(false)}>
-                  <li className="hover:text-gray-300 transition cursor-pointer">
-                    E-shop
-                  </li>
+                  <li className="hover:text-gray-300 transition cursor-pointer">E-shop</li>
                 </Link>
-                <li
-                  className="hover:text-gray-300 transition cursor-pointer"
-                  onClick={() => setOpen(false)}
-                >
-                  Rreth Nesh
-                </li>
+                <Link to="/aboutus" onClick={() => setOpen(false)}>
+                  <li className="hover:text-gray-300 transition cursor-pointer">Rreth Nesh</li>
+                </Link>
                 <Link to="/blog" onClick={() => setOpen(false)}>
-                  <li className="hover:text-gray-300 transition cursor-pointer">
-                    Blog
-                  </li>
+                  <li className="hover:text-gray-300 transition cursor-pointer">Blog</li>
                 </Link>
+
+                {/* Login/Logout edhe ne mobile menu */}
+                <div className="pt-4 border-t border-white/10">
+                  {isLoggedIn ? (
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left hover:text-gray-300 transition cursor-pointer"
+                    >
+                      <i className="fa-solid fa-right-from-bracket mr-2"></i>
+                      Logout
+                    </button>
+                  ) : (
+                    <Link to="/login" onClick={() => setOpen(false)}>
+                      <div className="hover:text-gray-300 transition cursor-pointer">
+                        <i className="fa-solid fa-right-to-bracket mr-2"></i>
+                        Login
+                      </div>
+                    </Link>
+                  )}
+                </div>
               </ul>
             </motion.div>
           </>
