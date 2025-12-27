@@ -1,5 +1,7 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/index";
-import React, { useEffect, useState } from "react"; import shopbag from "../../assets/Give Shop.png";
+import shopbag from "../../assets/Give Shop.png";
 import mouse from "../../assets/245b92b43d3cf7e3455d868c53712c92017165b2.jpg";
 import headphones from "../../assets/39c814ecb335f48a1f47ec0d5c189d6d04565b19.jpg";
 import joystick from "../../assets/2a82f7e2002671a521f1065c30d1204ca27b1f3c.png";
@@ -59,7 +61,7 @@ const HomePage = () => {
 
         <div className="max-w-6xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-7 mx-auto px-4">
           {featuredPosts.map((post) => (
-            <div key={post.postId} className="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
+            <Link to={`/product-details/${post.postId}`} key={post.postId} className="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
               <div className="w-full aspect-square overflow-hidden rounded-md mb-6">
                 <img
                   // Ktheje te imageUrl që vjen nga databaza
@@ -78,7 +80,7 @@ const HomePage = () => {
               <p className="text-lg font-bold tracking-wide text-gray-100">
                 Shiko Detajet
               </p>
-            </div>
+            </Link>
           ))}
         </div>
         <p className="text-sm text-white max-w-[35%] mx-auto mt-9 text-center">
