@@ -10,7 +10,7 @@ import monitor from "../../assets/a0af9d63deb24888bacceed0133091cd21da1c82.png";
 import man from "../../assets/Dono da proposta.png";
 import woman from "../../assets/Autor da proposta.png";
 import Footer from "../../components/Footer/index";
-
+import { Link } from "react-router-dom";
 const HomePage = () => {
   const [featuredPosts, setFeaturedPosts] = useState([]);
 
@@ -59,7 +59,7 @@ const HomePage = () => {
 
         <div className="max-w-6xl w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-7 mx-auto px-4">
           {featuredPosts.map((post) => (
-            <div key={post.postId} className="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
+            <Link key={post.postId} to={`/product-details/${post.postId}`} className="bg-[#12132a] rounded-xl border-2 border-[#8b5cf6] transition-all duration-300 p-6 flex flex-col items-center shadow-lg shadow-black/40">
               <div className="w-full aspect-square overflow-hidden rounded-md mb-6">
                 <img
                   // Ktheje te imageUrl që vjen nga databaza
@@ -78,7 +78,7 @@ const HomePage = () => {
               <p className="text-lg font-bold tracking-wide text-gray-100">
                 Shiko Detajet
               </p>
-            </div>
+            </Link>
           ))}
         </div>
         <p className="text-sm text-white max-w-[35%] mx-auto mt-9 text-center">
