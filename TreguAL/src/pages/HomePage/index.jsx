@@ -12,7 +12,6 @@ import monitor from "../../assets/a0af9d63deb24888bacceed0133091cd21da1c82.png";
 import man from "../../assets/Dono da proposta.png";
 import woman from "../../assets/Autor da proposta.png";
 import Footer from "../../components/Footer/index";
-import { Link } from "react-router-dom";
 const HomePage = () => {
   const [featuredPosts, setFeaturedPosts] = useState([]);
 
