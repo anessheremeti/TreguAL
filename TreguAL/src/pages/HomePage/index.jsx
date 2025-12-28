@@ -45,9 +45,11 @@ const HomePage = () => {
               gjë që të duhet në një vend të vetëm.
             </p>
             <div className="pt-6">
-              <button className="border border- hover:cursor-pointer border-white py-2.5 px-11 font-bold">
-                Shiko më shumë
-              </button>
+              <Link to="/product">
+                <button className="border border- hover:cursor-pointer border-white py-2.5 px-11 font-bold">
+                  Shiko më shumë
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -88,9 +90,11 @@ const HomePage = () => {
           Blej me siguri, krahaso me lehtësi dhe përfito më shumë çdo ditë!
         </p>
         <div className="pt-6">
-          <button className="border hover:cursor-pointer text-white border-solid border-white py-2.5 px-11 font-bold">
-            Shiko
-          </button>
+          <Link to="/product">
+            <button className="border hover:cursor-pointer text-white border-solid border-white py-2.5 px-11 font-bold">
+              Shiko
+            </button>
+          </Link>
         </div>
       </div>
       <div className="mt-9">
@@ -107,10 +111,12 @@ const HomePage = () => {
               të jetesës. Modele ergonomike, materiale cilësore dhe dizajn
               modern që e kthejnë çdo hapësirë në një ambient komod dhe elegant.
             </p>
-            <button className="inline-flex items-center justify-center hover:cursor-pointer gap-2 border border-gray-400 text-gray-100 px-8 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 font-bold">
-              Shiko me shume
-              <span className="text-lg">→</span>
-            </button>
+            <Link to="/product">
+              <button className="inline-flex items-center justify-center hover:cursor-pointer gap-2 border border-gray-400 text-gray-100 px-8 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 font-bold">
+                Shiko me shume
+                <span className="text-lg">→</span>
+              </button>
+            </Link>
           </div>
           <div className="relative inline-block rounded-2xl  mt-10  p-[3px] bg-linear-to-tr from-[#8b5cf6] via-[#7c3aed] to-[#06b6d4] transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(139,92,246,0.5)]">
             <img
@@ -140,10 +146,12 @@ const HomePage = () => {
               sofistikuar. Krijo hapësirën tënde perfekte me tavolina që
               përshtaten me ritmin tënd.
             </p>
-            <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center font-bold">
-              Shiko më shumë
-              <span className="text-lg">→</span>
-            </button>
+            <Link to="/product">
+              <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center font-bold">
+                Shiko më shumë
+                <span className="text-lg">→</span>
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -158,10 +166,12 @@ const HomePage = () => {
               produkt është zgjedhur për të përmirësuar ndjesinë dhe komoditetin
               në çdo hapësirë.
             </p>
-            <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center font-bold">
-              Shiko më shumë
-              <span className="text-lg">→</span>
-            </button>
+            <Link to='/product'>
+              <button className="relative inline-flex items-center justify-center gap-2 hover:cursor-pointer border border-gray-400 text-gray-100 px-6 py-2 rounded-md transition-all duration-300 hover:bg-white/10 hover:border-purple-400 content-center font-bold">
+                Shiko më shumë
+                <span className="text-lg">→</span>
+              </button>
+            </Link>
           </div>
 
           <div className="relative rounded-2xl p-[3px] bg-linear-to-tr from-[#8b5cf6] via-[#7c3aed] to-[#06b6d4] shadow-[0_0_35px_rgba(139,92,246,0.4)] transition-transform duration-500 hover-scale-[1.02] order-1 lg:order-2">
