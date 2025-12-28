@@ -1,5 +1,7 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/index";
-import React, { useEffect, useState } from "react"; import shopbag from "../../assets/Give Shop.png";
+import shopbag from "../../assets/Give Shop.png";
 import mouse from "../../assets/245b92b43d3cf7e3455d868c53712c92017165b2.jpg";
 import headphones from "../../assets/39c814ecb335f48a1f47ec0d5c189d6d04565b19.jpg";
 import joystick from "../../assets/2a82f7e2002671a521f1065c30d1204ca27b1f3c.png";

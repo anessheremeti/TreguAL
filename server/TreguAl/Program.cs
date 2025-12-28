@@ -25,6 +25,7 @@ builder.Configuration
  * Services
  * ========================================================= */
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 
 /* Swagger + JWT support */
 builder.Services.AddEndpointsApiExplorer();
@@ -66,11 +67,10 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<DataDapper>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 builder.Services.AddScoped<IHomeManager, HomeManager>(); // SHTESE: Lidhja e managerit të ri
 
-/* =========================================================
- * Authentication (JWT)
- * ========================================================= */
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
@@ -78,7 +78,7 @@ var jwtAudience = builder.Configuration["Jwt:Audience"];
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = true;
+options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -95,7 +95,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", p => p.RequireClaim("role_id", "4"));
+    options.AddPolicy("BusinessOnly", p => p.RequireClaim("role_id", "3"));
+    options.AddPolicy("SellerOnly", p => p.RequireClaim("role_id", "2"));
+    options.AddPolicy("AnyLoggedIn", p => p.RequireAuthenticatedUser());
+});
+
 
 /* =========================================================
  * CORS (from config)
@@ -136,6 +143,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
 

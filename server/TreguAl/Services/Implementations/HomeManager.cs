@@ -16,7 +16,6 @@ namespace HelloWorld.Services.Implementations
 
         public async Task<IEnumerable<DisplayProduct>> GetTopThreeProducts()
         {
-            // Query që merr postimin dhe vetëm foton e parë (MIN) që gjen për atë postim
             string sql = @"
                 SELECT p.post_id AS PostId, p.title, MIN(pi.image_url) AS ImageUrl
                 FROM posts p

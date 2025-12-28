@@ -3,10 +3,15 @@ using Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+
+
+
+
 namespace Application.Interfaces
 {
     public interface IUserService
     {
+    Task<AuthResponseDto> LoginAsync(LoginDto dto);
         Task<UserDto> CreateAsync(CreateUserDto dto);
         Task<UserDto?> GetByIdAsync(uint userId);
 
