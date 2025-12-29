@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BannerImage from "../assets/AboutUsImage.png";
 import Navbar from "../components/Navbar/index";
 import Footer from "../components/Footer/index";
 import AboutUsvideo from "../assets/AboutUsvideo.mp4";
-
+import { Link } from "react-router-dom";
 export default function AboutUs() {
+  const [latestPosts, setLatestPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("http://localhost:5104/api/BlogSection/latest");
+        if (!response.ok) throw new Error("Problem me rrjetin");
+
+        const data = await response.json();
+        setLatestPosts(data);
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+      }
+    };
+    fetchPosts();
+  }, []);
   return (
     <>
       <Navbar />
@@ -91,22 +107,19 @@ export default function AboutUs() {
         {/* ================= LAST BLOG POST ================= */}
         <div className="max-w-7xl mx-auto py-20 text-white">
           <h2 className="text-3xl font-semibold mb-10">Last blog post</h2>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <BlogCard
-              img={"/mnt/data/722be94e-c8ee-42e8-b1c8-74ff16906fef.png"}
-              title="Razer Blade 14 Gaming Laptop"
-            />
-
-            <BlogCard
-              img={"/mnt/data/722be94e-c8ee-42e8-b1c8-74ff16906fef.png"}
-              title="ASUS Zenbook 15 OLED 15.6” Laptop"
-            />
-
-            <BlogCard
-              img={"/mnt/data/722be94e-c8ee-42e8-b1c8-74ff16906fef.png"}
-              title="Nitro 5 Gaming Laptop"
-            />
+            {latestPosts.map((post) => (
+              <Link
+                to='/product'
+                key={post.postId}
+                className="block"
+              >
+                <BlogCard
+                  img={post.imageUrl || "/assets/placeholder.png"}
+                  title={post.title}
+                />
+              </Link>
+            ))}
           </div>
         </div>
       </section>
