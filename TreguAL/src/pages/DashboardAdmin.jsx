@@ -16,7 +16,7 @@ export default function DashboardAdmin() {
     <div className="flex">
       <Sidebar setPage={setPage} />
 
-<main className="flex-1 bg-[#0b1120] text-white p-6 md:ml-64">
+      <main className="flex-1 bg-[#0b1120] text-white p-6 md:ml-64">
 
         {page === "summary" && <SummaryCards />}
         {page === "users" && <UsersList />}

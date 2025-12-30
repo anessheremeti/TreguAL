@@ -1,11 +1,19 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios"; // Ose fetch
 export default function SummaryCards() {
+  const [stats, setStats] = useState(null);
+  useEffect(() => {
+    axios.get("http://localhost:5104/api/AdminDashboard/summary")
+      .then(res => setStats(res.data))
+      .catch(err => console.error(err));
+  }, []);
+  if (!stats) return <div className="p-6 text-white">Loading...</div>;
+
   const data = [
-    { title: "Total Users", value: 123, icon: "fa-solid fa-users" },
-    { title: "Active Posts", value: 88, icon: "fa-solid fa-list" },
-    { title: "Pending Ads", value: 12, icon: "fa-solid fa-clock" },
-    { title: "Total Payments", value: "400€", icon: "fa-solid fa-money-bill" },
+    { title: "Total Users", value: stats.totalUsers, icon: "fa-solid fa-users" },
+    { title: "Active Posts", value: stats.activePosts, icon: "fa-solid fa-list" },
+    { title: "Pending Ads", value: stats.pendingAds, icon: "fa-solid fa-clock" },
+    { title: "Total Payments", value: stats.totalPayments, icon: "fa-solid fa-money-bill" },
   ];
 
   return (
