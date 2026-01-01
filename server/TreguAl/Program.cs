@@ -71,7 +71,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IHomeManager, HomeManager>(); // SHTESE: Lidhja e managerit të ri
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAdminPostService, AdminPostService>();
-
+builder.Services.AddScoped<IMemberService, MemberService>();
 
 
 
