@@ -27,7 +27,6 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    // fshiji krejt ose vetem keto qe t'duhen
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("email");
@@ -36,7 +35,12 @@ const Navbar = () => {
 
     setIsLoggedIn(false);
     setOpen(false);
-    navigate("/"); // ose "/" si t'dush
+    navigate("/");
+  };
+
+  const goProfile = () => {
+    setOpen(false);
+    navigate("/my-profile"); // ✅ route i MyProfile
   };
 
   return (
@@ -73,16 +77,28 @@ const Navbar = () => {
             </Link>
           </ul>
 
-          {/* Butoni Login/Logout dhe Burger Icon */}
+          {/* Butoni Login/Logout, MyProfile dhe Burger Icon */}
           <div className="flex items-center gap-5">
             {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition"
-              >
-                <i className="fa-solid fa-right-from-bracket"></i>
-                Logout
-              </button>
+              <>
+                {/* ✅ MY PROFILE (desktop) */}
+                <button
+                  onClick={goProfile}
+                  className="hidden md:flex items-center gap-2 text-white font-brand font-bold hover:text-sky-400 transition"
+                >
+                  <i className="fa-solid fa-user"></i>
+                  My Profile
+                </button>
+
+                {/* LOGOUT */}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition"
+                >
+                  <i className="fa-solid fa-right-from-bracket"></i>
+                  Logout
+                </button>
+              </>
             ) : (
               <Link to="/login">
                 <button className="flex items-center gap-2 text-white font-brand font-bold hover:text-gray-300 transition">
@@ -135,25 +151,43 @@ const Navbar = () => {
                   <li className="hover:text-gray-300 transition cursor-pointer">Home</li>
                 </Link>
                 <Link to="/e-shop" onClick={() => setOpen(false)}>
-                  <li className="hover:text-gray-300 transition cursor-pointer">E-shop</li>
+                  <li className="hover:text-gray-300 transition cursor-pointer">
+                    E-shop
+                  </li>
                 </Link>
                 <Link to="/aboutus" onClick={() => setOpen(false)}>
-                  <li className="hover:text-gray-300 transition cursor-pointer">Rreth Nesh</li>
+                  <li className="hover:text-gray-300 transition cursor-pointer">
+                    Rreth Nesh
+                  </li>
                 </Link>
                 <Link to="/blog" onClick={() => setOpen(false)}>
-                  <li className="hover:text-gray-300 transition cursor-pointer">Blog</li>
+                  <li className="hover:text-gray-300 transition cursor-pointer">
+                    Blog
+                  </li>
                 </Link>
 
-                {/* Login/Logout edhe ne mobile menu */}
+                {/* ✅ My Profile + Login/Logout ne mobile */}
                 <div className="pt-4 border-t border-white/10">
                   {isLoggedIn ? (
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left hover:text-gray-300 transition cursor-pointer"
-                    >
-                      <i className="fa-solid fa-right-from-bracket mr-2"></i>
-                      Logout
-                    </button>
+                    <>
+                      {/* MY PROFILE (mobile) */}
+                      <button
+                        onClick={goProfile}
+                        className="w-full text-left hover:text-sky-400 transition cursor-pointer"
+                      >
+                        <i className="fa-solid fa-user mr-2"></i>
+                        My Profile
+                      </button>
+
+                      {/* LOGOUT (mobile) */}
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left hover:text-gray-300 transition cursor-pointer mt-4"
+                      >
+                        <i className="fa-solid fa-right-from-bracket mr-2"></i>
+                        Logout
+                      </button>
+                    </>
                   ) : (
                     <Link to="/login" onClick={() => setOpen(false)}>
                       <div className="hover:text-gray-300 transition cursor-pointer">

@@ -184,8 +184,8 @@ export default function CreateListingPage() {
       return;
     }
 
-    const out = await res.json();
-    window.location.href = `/post/${out.postId}`; // ose /my-listings, si e ki ti
+   // const out = await res.json();
+    window.location.href = `/my-profile`; // ose /my-listings, si e ki ti
   };
 
   // ======================================
