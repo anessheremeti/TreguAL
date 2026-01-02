@@ -101,6 +101,26 @@ private string GenerateJwtToken(uint userId, uint roleId, string email)
 
     return new JwtSecurityTokenHandler().WriteToken(token);
 }
+public async Task<bool> UpdateMeAsync(uint userId, UpdateMeDto dto)
+{
+    const string sql = @"
+        UPDATE users
+        SET full_name = @FullName,
+            email = @Email,
+            phone_number = @PhoneNumber
+        WHERE user_id = @UserId;
+    ";
+
+    await _db.ExecuteSqlAsync(sql, new
+    {
+        UserId = userId,
+        dto.FullName,
+        dto.Email,
+        dto.PhoneNumber
+    });
+
+    return true;
+}
 
         public async Task<UserDto> CreateAsync(CreateUserDto dto)
         {

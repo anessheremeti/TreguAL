@@ -18,5 +18,7 @@ namespace Application.Interfaces
           Task<UserDto> UpdateUserAsync(int id, User users);
         Task<bool> DeleteUserAsync(int id);
         Task<IEnumerable<UserDto>> GetAllAsync();
+        Task<bool> UpdateMeAsync(uint userId, UpdateMeDto dto);
+
     }
 }

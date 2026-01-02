@@ -48,9 +48,11 @@ namespace HelloWorld.Data
                 : (T)Convert.ChangeType(result, typeof(T));
         }
 
-        internal async Task ExecuteSqlAsync(string sql, object parameters)
-        {
-            throw new NotImplementedException();
-        }
+       public async Task ExecuteSqlAsync(string sql, object? parameters = null)
+{
+    using var connection = CreateConnection();
+    await connection.ExecuteAsync(sql, parameters);
+}
+
     }
 }
