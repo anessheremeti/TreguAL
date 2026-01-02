@@ -108,12 +108,27 @@ public class PostService : IPostService
     }
 
 
-    public async Task<IEnumerable<Post>> GetByUserAsync(uint userId)
-    {
-        const string sql = @"SELECT * FROM posts WHERE user_id = @userId";
-        using var db = Conn();
-        return await db.QueryAsync<Post>(sql, new { userId });
-    }
+   public async Task<IEnumerable<Post>> GetByUserAsync(uint userId)
+{
+    const string sql = @"
+        SELECT
+            post_id AS PostId,
+            user_id AS UserId,
+            category_id AS CategoryId,
+            title,
+            description,
+            phone_number AS PhoneNumber,
+            status,
+            created_at AS CreatedAt,
+            updated_at AS UpdatedAt
+        FROM posts
+        WHERE user_id = @userId
+    ";
+
+    using var db = Conn();
+    return await db.QueryAsync<Post>(sql, new { userId });
+}
+
 
     public async Task<IEnumerable<Post>> SearchAsync(string query)
     {

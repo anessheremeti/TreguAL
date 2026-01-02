@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System;
 
 
+
 namespace HelloWorld.Controllers;
 
 [ApiController]
@@ -19,6 +20,34 @@ private readonly IWebHostEnvironment _env;
     _service = service;
     _env = env;
 }
+[Authorize]
+[HttpGet("me")]
+public async Task<IActionResult> GetMyPosts()
+{
+    var userIdClaim = User.FindFirstValue("user_id")
+        ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    if (!uint.TryParse(userIdClaim, out var userId))
+        return Unauthorized();
+
+    var posts = await _service.GetByUserAsync(userId);
+
+    // ✅ Siguro postId në response (camelCase)
+    var result = posts.Select(p => new
+    {
+        postId = p.PostId,
+        title = p.Title,
+        description = p.Description,
+        phoneNumber = p.PhoneNumber,
+        categoryId = p.CategoryId,
+        userId = p.UserId,
+        createdAt = p.CreatedAt,      // nëse e ki
+        images = p.Images            // nëse i kthen
+    });
+
+    return Ok(result);
+}
+
 [Authorize]
 [HttpPost("create-with-images")]
 [RequestSizeLimit(50_000_000)]
