@@ -22,8 +22,8 @@ export default function DashboardAdmin() {
         {page === "users" && <UsersList />}
         {page === "posts" && <PostManagement />}
         {page === "ads" && <AdsManagement />}
-        {page === "payments" && <Payments />}
-        {page === "reviews" && <Reviews />}
+        {/* {page === "payments" && <Payments />}
+        {page === "reviews" && <Reviews />} */}
 
       </main>
     </div>

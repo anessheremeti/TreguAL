@@ -1,260 +1,326 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-export default function AdsManagement() {
-  const pendingAds = [
-    {
-      id: 1,
-      title: "Reklamë për iPhone 13",
-      user: "Arben Krasniqi",
-      status: "Pending",
-      date: "2024-01-22",
-      images: [
-        "https://via.placeholder.com/300x200?text=Pending+1",
-        "https://via.placeholder.com/300x200?text=Pending+1b",
-      ],
-    },
-    {
-      id: 4,
-      title: "Laptop Gamer MSI",
-      user: "Driton P.",
-      status: "Pending",
-      date: "2024-01-28",
-      images: [
-        "https://via.placeholder.com/300x200?text=Pending+2",
-        "https://via.placeholder.com/300x200?text=Pending+2b",
-      ],
-    },
-  ];
+export default function AdminAdsPage() {
+  // =========================
+  // API + AUTH
+  // =========================
+  const API = "http://localhost:5104";
+  const token = localStorage.getItem("token");
+  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
-  const activeAds = [
-    {
-      id: 2,
-      title: "Reklamë për banesë me qira",
-      user: "Elira Gashi",
-      status: "Active",
-      date: "2024-02-10",
-      images: [
-        "https://via.placeholder.com/300x200?text=Active+1",
-        "https://via.placeholder.com/300x200?text=Active+1b",
-      ],
-    },
-    {
-      id: 5,
-      title: "Shitet MacBook Pro 2021",
-      user: "Kujtim Berisha",
-      status: "Active",
-      date: "2024-02-05",
-      images: [
-        "https://via.placeholder.com/300x200?text=Active+2",
-        "https://via.placeholder.com/300x200?text=Active+2b",
-      ],
-    },
-  ];
+  // ===== Form State =====
+  const [title, setTitle] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [loadingAds, setLoadingAds] = useState(false);
+  const fileRef = useRef(null);
 
-  const expiredRejectedAds = [
-    {
-      id: 3,
-      title: "Reklamë për veturë (E skaduar)",
-      user: "Luan Berisha",
-      status: "Expired",
-      date: "2023-12-05",
-      images: ["https://via.placeholder.com/300x200?text=Expired+1"],
-    },
-    {
-      id: 6,
-      title: "Ofertë për TV Samsung (Refuzuar)",
-      user: "Besim H.",
-      status: "Rejected",
-      date: "2023-11-18",
-      images: [
-        "https://via.placeholder.com/300x200?text=Rejected+1",
-        "https://via.placeholder.com/300x200?text=Rejected+1b",
-      ],
-    },
-  ];
+  // ===== Cards State (API) =====
+  const [ads, setAds] = useState([]);
+
+  const canSubmit = useMemo(() => {
+    return title.trim().length >= 3 && !!imageFile && !saving;
+  }, [title, imageFile, saving]);
+
+  const pickFile = () => fileRef.current?.click();
+
+  const onFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Ju lutem zgjidhni vetëm foto (image).");
+      e.target.value = "";
+      return;
+    }
+
+    setImageFile(file);
+
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+  };
+
+  const removeImage = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setImageFile(null);
+    setPreviewUrl("");
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const mapAds = (data) =>
+    (data || []).map((x) => ({
+      id: x.adId,
+      title: x.title || "",
+      createdAt: (x.createdAt || "").slice(0, 10),
+      image: x.imageUrl,
+    }));
+
+  const loadAds = async () => {
+    try {
+      setLoadingAds(true);
+      const res = await fetch(`${API}/api/ads`);
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      setAds(mapAds(data));
+    } catch (err) {
+      alert("Gabim në ngarkim të ads: " + (err?.message || "Gabim."));
+    } finally {
+      setLoadingAds(false);
+    }
+  };
+
+  // LOAD ADS ON MOUNT
+  useEffect(() => {
+    loadAds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!canSubmit) return;
+
+    try {
+      setSaving(true);
+
+      const fd = new FormData();
+      fd.append("title", title.trim());
+      fd.append("description", "");
+      fd.append("image", imageFile);
+
+      const res = await fetch(`${API}/api/ads`, {
+        method: "POST",
+        headers: { ...authHeaders }, // MOS vendos Content-Type me dorë te FormData
+        body: fd,
+      });
+
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg);
+      }
+
+      // rifresko listën (më e sigurt)
+      await loadAds();
+
+      setTitle("");
+      removeImage();
+    } catch (err) {
+      alert("Gabim: " + (err?.message || "gjatë ruajtjes."));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onDelete = async (id) => {
+    // optimistik
+    const prev = ads;
+    setAds((p) => p.filter((x) => x.id !== id));
+
+    try {
+      const res = await fetch(`${API}/api/ads/${id}`, {
+        method: "DELETE",
+        headers: { ...authHeaders },
+      });
+
+      if (!res.ok && res.status !== 204) {
+        // ktheje mbrapsht nëse dështoi
+        setAds(prev);
+        alert("S’u fshi. Kontrollo API.");
+      }
+    } catch (err) {
+      setAds(prev);
+      alert("Gabim gjatë fshirjes.");
+    }
+  };
 
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-3xl font-bold mb-6">Ads Management</h1>
-
-      {/* ===== TOP COUNTER CARDS ===== */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-
-        {/* Pending Counter */}
-        <button
-          onClick={() =>
-            document
-              .getElementById("pending-section")
-              .scrollIntoView({ behavior: "smooth" })
-          }
-          className="bg-slate-800 p-6 rounded-xl shadow-lg flex flex-col items-center hover:bg-slate-700 transition"
-        >
-          <i className="fa-solid fa-clock text-blue-400 text-3xl mb-2"></i>
-          <h3 className="text-lg font-semibold">Pending Ads</h3>
-          <p className="text-3xl font-bold text-blue-400">
-            {pendingAds.length}
+    <div className="min-h-screen bg-[#0B0F1A] text-white p-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">Admin • Ads</h1>
+          <p className="text-gray-400 mt-1">
+            Posto reklamë + shfaq reklamat si cards (API real).
           </p>
-        </button>
+        </div>
 
-        {/* Active Counter */}
-        <button
-          onClick={() =>
-            document
-              .getElementById("active-section")
-              .scrollIntoView({ behavior: "smooth" })
-          }
-          className="bg-slate-800 p-6 rounded-xl shadow-lg flex flex-col items-center hover:bg-slate-700 transition"
-        >
-          <i className="fa-solid fa-bullhorn text-green-400 text-3xl mb-2"></i>
-          <h3 className="text-lg font-semibold">Active Ads</h3>
-          <p className="text-3xl font-bold text-green-400">
-            {activeAds.length}
-          </p>
-        </button>
+        {/* Layout: Form + Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* ===== Left: Form ===== */}
+          <div className="lg:col-span-2">
+            <div className="bg-white/5 border border-white/10 rounded-2xl shadow-xl p-6">
+              <h2 className="text-xl font-semibold mb-4">Posto Ad</h2>
 
-        {/* Expired */}
-        <button
-          onClick={() =>
-            document
-              .getElementById("expired-section")
-              .scrollIntoView({ behavior: "smooth" })
-          }
-          className="bg-slate-800 p-6 rounded-xl shadow-lg flex flex-col items-center hover:bg-slate-700 transition"
-        >
-          <i className="fa-solid fa-ban text-red-400 text-3xl mb-2"></i>
-          <h3 className="text-lg font-semibold">Expired / Rejected</h3>
-          <p className="text-3xl font-bold text-red-400">
-            {expiredRejectedAds.length}
-          </p>
-        </button>
+              <form onSubmit={onSubmit} className="space-y-5">
+                {/* Title */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Titulli
+                  </label>
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="p.sh. Shitet iPhone 13..."
+                    className="w-full rounded-xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-white/30 focus:ring-2 focus:ring-white/10 transition"
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    Minimum 3 karaktere.
+                  </p>
+                </div>
+
+                {/* Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Foto
+                  </label>
+
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={onFileChange}
+                    className="hidden"
+                  />
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={pickFile}
+                      className="px-4 py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-100 transition"
+                    >
+                      Zgjidh foton
+                    </button>
+
+                    {imageFile ? (
+                      <div className="text-sm text-gray-300">
+                        <div className="font-medium">{imageFile.name}</div>
+                        <div className="text-gray-500 text-xs">
+                          {(imageFile.size / 1024).toFixed(0)} KB
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-400">
+                        Asnjë foto e zgjedhur.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Preview */}
+                  <div className="mt-4">
+                    {previewUrl ? (
+                      <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/20">
+                        <img
+                          src={previewUrl}
+                          alt="preview"
+                          className="w-full h-56 object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="absolute top-3 right-3 bg-black/60 hover:bg-black/80 border border-white/10 text-white px-3 py-1.5 rounded-full text-sm transition"
+                        >
+                          Hiqe
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="rounded-2xl border border-dashed border-white/15 bg-black/20 h-40 flex items-center justify-center text-gray-500">
+                        Preview del këtu.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={!canSubmit}
+                  className={`w-full py-3 rounded-xl font-semibold transition
+                    ${
+                      canSubmit
+                        ? "bg-emerald-500 text-black hover:bg-emerald-400"
+                        : "bg-white/10 text-gray-500 cursor-not-allowed"
+                    }`}
+                >
+                  {saving ? "Duke ruajtur..." : "Posto"}
+                </button>
+
+                {!token && (
+                  <p className="text-xs text-amber-300">
+                    * S’ka token. POST/DELETE do dështojnë pa login.
+                  </p>
+                )}
+              </form>
+            </div>
+          </div>
+
+          {/* ===== Right: Cards ===== */}
+          <div className="lg:col-span-3">
+            <div className="bg-white/5 border border-white/10 rounded-2xl shadow-xl p-6">
+              <div className="flex items-center justify-between gap-4 mb-5">
+                <h2 className="text-xl font-semibold">Reklamat e postuara</h2>
+                <span className="text-sm text-gray-400">
+                  Totali: <span className="text-white">{ads.length}</span>
+                </span>
+              </div>
+
+              {loadingAds ? (
+                <div className="rounded-2xl border border-white/10 bg-black/20 p-10 text-center text-gray-400">
+                  Duke ngarkuar...
+                </div>
+              ) : ads.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-white/15 bg-black/20 p-10 text-center text-gray-500">
+                  S’ka asnjë ad ende.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {ads.map((ad) => (
+                    <div
+                      key={ad.id}
+                      className="bg-black/25 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition"
+                    >
+                      <div className="relative">
+                        <img
+                          src={ad.image}
+                          alt={ad.title}
+                          className="w-full h-44 object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                        <div className="absolute bottom-3 left-3 right-3">
+                          <div className="text-sm text-gray-300">
+                            {ad.createdAt}
+                          </div>
+                          <div className="font-semibold leading-snug">
+                            {ad.title}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-4 flex items-center justify-between gap-3">
+                        <div className="text-xs text-gray-400">ID: {ad.id}</div>
+
+                        <button
+                          onClick={() => onDelete(ad.id)}
+                          className="px-3 py-2 rounded-xl bg-red-500/15 border border-red-500/25 text-red-200 hover:bg-red-500/25 hover:border-red-500/40 transition text-sm font-semibold"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={loadAds}
+                className="mt-6 px-4 py-2 rounded-xl bg-white/10 border border-white/10 hover:bg-white/15 transition text-sm font-semibold"
+              >
+                Rifresko listën
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* ============ Pending Ads Section ============ */}
-      <Section id="pending-section" title="Pending Ads">
-        {pendingAds.map((ad) => (
-          <AdCard key={ad.id} ad={ad} type="pending" />
-        ))}
-      </Section>
-
-      {/* ============ Active Ads Section ============ */}
-      <Section id="active-section" title="Active Ads">
-        {activeAds.map((ad) => (
-          <AdCard key={ad.id} ad={ad} type="active" />
-        ))}
-      </Section>
-
-      {/* ============ Expired Section ============ */}
-      <Section id="expired-section" title="Expired & Rejected">
-        {expiredRejectedAds.map((ad) => (
-          <AdCard key={ad.id} ad={ad} type="expired" />
-        ))}
-      </Section>
-    </div>
-  );
-}
-
-/* ---------------- SECTION WRAPPER ---------------- */
-function Section({ id, title, children }) {
-  return (
-    <div id={id} className="mb-10">
-      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
-
-      <div className="flex flex-wrap gap-6">{children}</div>
-    </div>
-  );
-}
-
-/* ---------------- AD CARD ---------------- */
-function AdCard({ ad, type }) {
-  const [index, setIndex] = useState(0);
-
-  const nextImage = () =>
-    setIndex((i) => (i + 1) % ad.images.length);
-  const prevImage = () =>
-    setIndex((i) => (i - 1 + ad.images.length) % ad.images.length);
-
-  return (
-    <div className="bg-slate-800 p-6 rounded-xl shadow-lg flex flex-col gap-4 w-[300px]">
-
-      {/* Slider */}
-      <div className="relative w-full h-40 rounded-lg overflow-hidden">
-        <img
-          src={ad.images[index]}
-          className="w-full h-full object-cover"
-          alt="ad"
-        />
-
-        {/* Prev */}
-        {ad.images.length > 1 && (
-          <button
-            onClick={prevImage}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
-          >
-            <i className="fa-solid fa-chevron-left" />
-          </button>
-        )}
-
-        {/* Next */}
-        {ad.images.length > 1 && (
-          <button
-            onClick={nextImage}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
-          >
-            <i className="fa-solid fa-chevron-right" />
-          </button>
-        )}
-      </div>
-
-      <h2 className="text-xl font-bold">{ad.title}</h2>
-
-      <p className="text-gray-300 flex items-center gap-2">
-        <i className="fa-solid fa-user text-blue-400" /> {ad.user}
-      </p>
-
-      <p className="text-gray-300 flex items-center gap-2">
-        <i className="fa-solid fa-calendar text-purple-400" /> {ad.date}
-      </p>
-
-      <p className="text-gray-300">
-        Status:{" "}
-        <span className="font-semibold text-yellow-400">
-          {ad.status}
-        </span>
-      </p>
-
-      {/* Pending Buttons */}
-      {type === "pending" && (
-        <div className="flex gap-3 mt-3">
-          <button className="bg-green-600 hover:bg-green-700 transition py-2 px-4 rounded-lg flex-1">
-            Approve
-          </button>
-          <button className="bg-red-600 hover:bg-red-700 transition py-2 px-4 rounded-lg flex-1">
-            Reject
-          </button>
-        </div>
-      )}
-
-      {/* Active Buttons */}
-      {type === "active" && (
-        <div className="flex flex-col gap-3 mt-3">
-          {/* <button className="bg-yellow-600 hover:bg-yellow-700 transition py-2 rounded-lg">
-            Disable
-          </button>
-          <button className="bg-blue-600 hover:bg-blue-700 transition py-2 rounded-lg">
-            Edit Date
-          </button>
-          <button className="bg-red-600 hover:bg-red-700 transition py-2 rounded-lg">
-            Delete
-          </button> */}
-        </div>
-      )}
-
-      {/* Expired Text */}
-      {type === "expired" && (
-        <div className="text-gray-500 italic mt-3">
-          *This ad is no longer active.
-        </div>
-      )}
     </div>
   );
 }
