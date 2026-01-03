@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.FileProviders; // SHTESE: per /ads static files
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -72,8 +73,7 @@ builder.Services.AddScoped<IHomeManager, HomeManager>(); // SHTESE: Lidhja e man
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAdminPostService, AdminPostService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
-
-
+builder.Services.AddScoped<IAdsService, AdsService>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
@@ -106,7 +106,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SellerOnly", p => p.RequireClaim("role_id", "2"));
     options.AddPolicy("AnyLoggedIn", p => p.RequireAuthenticatedUser());
 });
-
 
 /* =========================================================
  * CORS (from config)
@@ -147,7 +146,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); // wwwroot default
+
+// SHTESE: /ads static serving (wwwroot/ads)
+var adsPhysical = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ads");
+Directory.CreateDirectory(adsPhysical);
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(adsPhysical),
+    RequestPath = "/ads"
+});
 
 app.UseCors("AllowFrontend");
 
