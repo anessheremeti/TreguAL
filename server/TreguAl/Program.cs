@@ -3,14 +3,16 @@ using Application.Services;
 using HelloWorld.Data;
 using HelloWorld.Interfaces;
 using HelloWorld.Services;
-using HelloWorld.Services.Interfaces; // SHTESE
-using HelloWorld.Services.Implementations; // SHTESE
+using HelloWorld.Services.Interfaces;
+using HelloWorld.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.FileProviders; // SHTESE: per /ads static files
 using System.Text;
+using CloudinaryDotNet;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +29,18 @@ builder.Configuration
  * ========================================================= */
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton(sp =>
+{
+    var cfg = sp.GetRequiredService<IConfiguration>()
+                .GetSection("Cloudinary");
 
-/* Swagger + JWT support */
+    return new Cloudinary(new Account(
+        cfg["CloudName"],
+        cfg["ApiKey"],
+        cfg["ApiSecret"]
+    ));
+});
+/* Swagger + JWT */
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -69,12 +81,13 @@ builder.Services.AddScoped<DataDapper>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IHomeManager, HomeManager>(); // SHTESE: Lidhja e managerit të ri
+builder.Services.AddScoped<IHomeManager, HomeManager>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAdminPostService, AdminPostService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IAdsService, AdsService>();
 
+/* JWT */
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
@@ -108,7 +121,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 /* =========================================================
- * CORS (from config)
+ * CORS
  * ========================================================= */
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
@@ -131,14 +144,14 @@ builder.Services.AddCors(options =>
  * ========================================================= */
 var app = builder.Build();
 
-/* Global error handling (minimal) */
+/* Error handling */
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/error");
     app.UseHsts();
 }
 
-/* Swagger only in Dev */
+/* Swagger */
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -146,10 +159,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // wwwroot default
 
-// SHTESE: /ads static serving (wwwroot/ads)
-var adsPhysical = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ads");
+/* =========================================================
+ * Static Files
+ * ========================================================= */
+
+// wwwroot default
+app.UseStaticFiles();
+
+// -------- ADS --------
+var adsPhysical = Path.Combine(
+    builder.Environment.WebRootPath,
+    "ads"
+);
+
 Directory.CreateDirectory(adsPhysical);
 
 app.UseStaticFiles(new StaticFileOptions
@@ -157,6 +180,22 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(adsPhysical),
     RequestPath = "/ads"
 });
+
+// -------- UPLOADS (POST IMAGES) --------
+var uploadsPhysical = Path.Combine(
+    builder.Environment.WebRootPath,
+    "uploads"
+);
+
+Directory.CreateDirectory(uploadsPhysical);
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPhysical),
+    RequestPath = "/uploads"
+});
+
+/* ========================================================= */
 
 app.UseCors("AllowFrontend");
 

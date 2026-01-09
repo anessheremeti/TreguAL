@@ -17,5 +17,6 @@ public interface IPostService
     Task<bool> AddImageAsync(uint postId, string imageUrl);
     Task<IEnumerable<PostImage>> GetImagesAsync(uint postId);
 
-    
+    // Migrate relative image URLs (e.g. "/uploads/...") to absolute by prefixing the provided base URL
+    Task<int> MigrateRelativeImageUrlsAsync(string baseUrl);
 }
