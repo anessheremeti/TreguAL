@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { normalizeImageUrl } from "../utils/imageUtils";
+import { getApiUrl } from "../config/api";
 
 export default function AdminAdsPage() {
   // =========================
   // API + AUTH
   // =========================
-  const API = "http://localhost:5104";
   const token = localStorage.getItem("token");
   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
@@ -48,22 +49,38 @@ export default function AdminAdsPage() {
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  const mapAds = (data) =>
-    (data || []).map((x) => ({
-      id: x.adId,
-      title: x.title || "",
-      createdAt: (x.createdAt || "").slice(0, 10),
-      image: x.imageUrl,
-    }));
+  const mapAds = (data) => {
+    if (!data || !Array.isArray(data)) return [];
+    
+    return data.map((x) => {
+      // Get raw image URL from API response - handle multiple possible property names
+      const rawImageUrl = x.imageUrl || x.ImageUrl || x.image_url || "";
+      
+      // Normalize image URL - handle both relative and absolute URLs
+      const imageUrl = normalizeImageUrl(rawImageUrl);
+      
+      return {
+        id: x.adId || x.ad_id,
+        title: x.title || x.Title || "",
+        createdAt: (x.createdAt || x.created_at || "").slice(0, 10),
+        image: imageUrl || "", // Ensure we always have a string, even if empty
+      };
+    });
+  };
 
   const loadAds = async () => {
     try {
       setLoadingAds(true);
-      const res = await fetch(`${API}/api/ads`);
-      if (!res.ok) throw new Error(await res.text());
+      const res = await fetch(getApiUrl("/api/ads"));
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || "Gabim në ngarkim të ads");
+      }
       const data = await res.json();
-      setAds(mapAds(data));
+      const mappedAds = mapAds(data);
+      setAds(mappedAds);
     } catch (err) {
+      console.error("Error loading ads:", err);
       alert("Gabim në ngarkim të ads: " + (err?.message || "Gabim."));
     } finally {
       setLoadingAds(false);
@@ -80,6 +97,11 @@ export default function AdminAdsPage() {
     e.preventDefault();
     if (!canSubmit) return;
 
+    if (!token) {
+      alert("Duhet të jesh i kyqur për të postuar ads.");
+      return;
+    }
+
     try {
       setSaving(true);
 
@@ -88,23 +110,29 @@ export default function AdminAdsPage() {
       fd.append("description", "");
       fd.append("image", imageFile);
 
-      const res = await fetch(`${API}/api/ads`, {
+      const res = await fetch(getApiUrl("/api/ads"), {
         method: "POST",
         headers: { ...authHeaders }, // MOS vendos Content-Type me dorë te FormData
         body: fd,
       });
 
       if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg);
+        let errorMessage = "Gabim gjatë ruajtjes së ad-it.";
+        try {
+          const errorText = await res.text();
+          errorMessage = errorText || errorMessage;
+        } catch {
+          // If we can't read error text, use default message
+        }
+        throw new Error(errorMessage);
       }
 
-      // rifresko listën (më e sigurt)
+      // Success - refresh list and reset form
       await loadAds();
-
       setTitle("");
       removeImage();
     } catch (err) {
+      console.error("Error creating ad:", err);
       alert("Gabim: " + (err?.message || "gjatë ruajtjes."));
     } finally {
       setSaving(false);
@@ -112,24 +140,43 @@ export default function AdminAdsPage() {
   };
 
   const onDelete = async (id) => {
-    // optimistik
+    if (!id) {
+      alert("ID e ad-it mungon.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "A je i sigurt që don me e fshi këtë ad? Kjo veprim nuk mund të zhbëhet."
+    );
+    if (!confirmed) return;
+
+    // Optimistic update
     const prev = ads;
     setAds((p) => p.filter((x) => x.id !== id));
 
     try {
-      const res = await fetch(`${API}/api/ads/${id}`, {
+      const res = await fetch(getApiUrl(`/api/ads/${id}`), {
         method: "DELETE",
         headers: { ...authHeaders },
       });
 
       if (!res.ok && res.status !== 204) {
-        // ktheje mbrapsht nëse dështoi
+        // Rollback nëse dështoi
         setAds(prev);
-        alert("S’u fshi. Kontrollo API.");
+        let errorMessage = "S'u fshi ad-i.";
+        try {
+          const errorText = await res.text();
+          errorMessage = errorText || errorMessage;
+        } catch {
+          // If we can't read error text, use default message
+        }
+        alert(errorMessage);
       }
     } catch (err) {
+      // Rollback nëse dështoi
       setAds(prev);
-      alert("Gabim gjatë fshirjes.");
+      console.error("Error deleting ad:", err);
+      alert("Gabim gjatë fshirjes: " + (err?.message || "Gabim i panjohur."));
     }
   };
 
@@ -278,12 +325,40 @@ export default function AdminAdsPage() {
                       key={ad.id}
                       className="bg-black/25 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition"
                     >
-                      <div className="relative">
-                        <img
-                          src={ad.image}
-                          alt={ad.title}
-                          className="w-full h-44 object-cover"
-                        />
+                      <div className="relative bg-black/50">
+                        {ad.image? (
+                          <>
+                            <img
+                              src={ad.image}
+                              alt={ad.title || "Ad"}
+                              className="w-full h-44 object-cover"
+                              onError={(e) => {
+                                // Hide the broken image and show fallback
+                                e.target.style.display = "none";
+                                const fallback = e.target.nextElementSibling;
+                                if (fallback) {
+                                  fallback.style.display = "flex";
+                                }
+                              }}
+                            />
+                            <div 
+                              className="w-full h-44 flex items-center justify-center text-gray-500 text-sm bg-black/30"
+                              style={{ display: "none" }}
+                            >
+                              <div className="text-center">
+                                <div className="text-4xl mb-2">📷</div>
+                                <div>Image Not Found</div>
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="w-full h-44 flex items-center justify-center text-gray-500 text-sm bg-black/30">
+                            <div className="text-center">
+                              <div className="text-4xl mb-2">📷</div>
+                              <div>No Image Available</div>
+                            </div>
+                          </div>
+                        )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                         <div className="absolute bottom-3 left-3 right-3">
                           <div className="text-sm text-gray-300">
