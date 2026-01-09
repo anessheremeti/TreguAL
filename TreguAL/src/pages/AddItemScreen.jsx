@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { getApiUrl } from "../config/api";
 
 import React, { useState, useRef } from "react";
 
@@ -123,23 +124,40 @@ export default function CreateListingPage() {
     const err = {};
 
     const hasPhoto = images.some((img) => img !== null);
-    if (!hasPhoto) err.images = "You must upload at least 1 product photo.";
+    if (!hasPhoto) {
+      err.images = "Duhet të ngarkosh të paktën 1 foto të produktit.";
+    }
 
-    if (form.title.trim().length < 3)
+    const trimmedTitle = form.title.trim();
+    if (!trimmedTitle) {
+      err.title = "Titulli është i detyrueshëm.";
+    } else if (trimmedTitle.length < 3) {
       err.title = "Titulli duhet të ketë të paktën 3 karaktere.";
+    }
 
-    if (form.description.trim().length < 10)
+    const trimmedDescription = form.description.trim();
+    if (!trimmedDescription) {
+      err.description = "Përshkrimi është i detyrueshëm.";
+    } else if (trimmedDescription.length < 10) {
       err.description = "Përshkrimi duhet të ketë të paktën 10 karaktere.";
+    }
 
-    if (!form.brand.trim()) err.brand = "Marka është e detyrueshme.";
+    if (!form.brand.trim()) {
+      err.brand = "Marka është e detyrueshme.";
+    }
 
-    if (!form.categoryName) err.categoryName = "Zgjedh një kategori.";
+    if (!form.categoryName) {
+      err.categoryName = "Zgjedh një kategori.";
+    }
 
-    if (!form.phoneNumber.trim())
+    const trimmedPhoneNumber = form.phoneNumber.trim();
+    if (!trimmedPhoneNumber) {
       err.phoneNumber = "Numri telefonit është i detyrueshëm.";
+    }
 
-    if (form.price && Number(form.price) < 0)
+    if (form.price && Number(form.price) < 0) {
       err.price = "Çmimi duhet të jetë një numër pozitiv.";
+    }
 
     setErrors(err);
     return Object.keys(err).length === 0;
@@ -157,36 +175,69 @@ export default function CreateListingPage() {
 
     const categoryId = CATEGORY_MAP[form.categoryName] || 1;
 
-    const data = new FormData();
-    data.append("CategoryId", String(categoryId));
-    data.append("Title", form.title);
-    data.append("Description", form.description);
-    data.append("PhoneNumber", form.phoneNumber);
+    // Create FormData with all required fields
+    const formData = new FormData();
+    formData.append("CategoryId", String(categoryId));
+    formData.append("Title", form.title.trim());
+    formData.append("Description", form.description.trim() || "");
+    formData.append("PhoneNumber", form.phoneNumber.trim());
 
+    // Add images to FormData
     images.forEach((img) => {
-      if (img) data.append("Images", img);
+      if (img) {
+        formData.append("Images", img);
+      }
     });
 
-    const res = await fetch(
-      "http://localhost:5104/api/posts/create-with-images",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: data,
+    try {
+      const res = await fetch(
+        getApiUrl("/api/posts/create-with-images"),
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // Don't set Content-Type header - browser will set it automatically with boundary for FormData
+          },
+          body: formData,
+        }
+      );
+
+      if (!res.ok) {
+        let errorMessage = "Ndodhi një gabim gjatë krijimit të shpalljes.";
+        try {
+          const errorData = await res.json();
+          // Handle validation errors
+          if (errorData.errors) {
+            const errorMessages = Object.entries(errorData.errors)
+              .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(", ") : messages}`)
+              .join("\n");
+            errorMessage = `Gabim validimi:\n${errorMessages}`;
+          } else if (errorData.title) {
+            errorMessage = errorData.title;
+          } else if (typeof errorData === "string") {
+            errorMessage = errorData;
+          }
+        } catch {
+          // If response is not JSON, try to get text
+          const text = await res.text();
+          if (text) errorMessage = text;
+        }
+        alert(errorMessage);
+        return;
       }
-    );
 
-    if (!res.ok) {
-      const msg = await res.text();
-      alert("Gabim: " + msg);
-      return;
+      // Success - redirect to profile
+      window.location.href = `/my-profile`;
+    } catch (error) {
+      console.error("Error creating post:", error);
+      alert("Ndodhi një gabim gjatë lidhjes me serverin. Ju lutem provoni përsëri.");
     }
-
-   // const out = await res.json();
-    window.location.href = `/my-profile`; // ose /my-listings, si e ki ti
   };
+
+
+  // Note: Cloudinary upload function removed as it's not being used
+  // If needed in the future, implement it separately
+
 
   // ======================================
   //         UI RENDER

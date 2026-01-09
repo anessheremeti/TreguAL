@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { normalizeImageUrl } from "../utils/imageUtils";
 
 export default function PostManagement() {
   const [posts, setPosts] = useState([]);
@@ -61,7 +62,7 @@ function PostCard({ post }) {
 
   // Menaxhimi i fotove: Nëse databaza nuk ka foto, përdorim një placeholder
   const images = post.imageUrls && post.imageUrls.length > 0
-    ? post.imageUrls
+    ? post.imageUrls.map(url => normalizeImageUrl(url)).filter(Boolean)
     : ["https://via.placeholder.com/300x200?text=Pa+Foto"];
 
   const nextImage = (e) => {

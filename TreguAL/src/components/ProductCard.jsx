@@ -1,5 +1,6 @@
 import { Star, ShoppingCart } from "lucide-react";
 import React from "react";
+import { getFirstImageUrl } from "../utils/imageUtils";
 
 function ProductCard({ product }) {
   if (!product) return null;
@@ -25,13 +26,16 @@ function ProductCard({ product }) {
       
       <div className="relative bg-white h-48 sm:h-56 flex items-center justify-center overflow-hidden">
         <img
-          src={images?.map(image => image.imageUrl)[0]}
-          alt={name}
+          src={getFirstImageUrl(images) || "https://via.placeholder.com/300?text=No+Image"}
+          alt={title}
           className="
             w-full h-full object-cover 
             group-hover:scale-105 
             transition-transform duration-300
           "
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/300?text=No+Image";
+          }}
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
       </div>
