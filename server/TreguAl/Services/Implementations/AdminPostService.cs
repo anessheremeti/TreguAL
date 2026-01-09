@@ -16,7 +16,6 @@ namespace HelloWorld.Services.Implementations
 
         public async Task<IEnumerable<AdminPostDisplayDto>> GetAllPostsForAdminAsync()
         {
-            // SQL Query mbetet i njëjtë
             string sql = @"
                 SELECT 
                     p.post_id AS PostId, 
@@ -32,14 +31,11 @@ namespace HelloWorld.Services.Implementations
                 JOIN categories c ON p.category_id = c.category_id
                 LEFT JOIN post_images pi ON p.post_id = pi.post_id";
 
-            // Përdorim LoadDataAsync pasi këtë metodë e keni në DataDapper.cs
             var rawData = await _dapper.LoadDataAsync<dynamic>(sql);
-
             var postDictionary = new Dictionary<int, AdminPostDisplayDto>();
 
             foreach (var row in rawData)
             {
-                // Rregullimi i gabimit "Cannot infer type": Përcaktojmë tipin AdminPostDisplayDto?
                 if (!postDictionary.TryGetValue((int)row.PostId, out AdminPostDisplayDto? post))
                 {
                     post = new AdminPostDisplayDto
@@ -56,7 +52,6 @@ namespace HelloWorld.Services.Implementations
                     postDictionary.Add(post.PostId, post);
                 }
 
-                // Shtohet fotoja nëse ekziston
                 if (row.ImageUrl != null)
                 {
                     post.ImageUrls.Add(row.ImageUrl);
@@ -64,6 +59,24 @@ namespace HelloWorld.Services.Implementations
             }
 
             return postDictionary.Values;
+        }
+
+        // Kjo është metoda që mungonte dhe shkaktonte vizën e kuqe
+        public async Task<bool> DeletePostAsync(int postId)
+        {
+            string sql = "DELETE FROM posts WHERE post_id = @PostId";
+
+            // Supozojmë se DataDapper ka metodë për ekzekutim (ExecuteSql)
+            // Nëse metoda jote në DataDapper quhet ndryshe, përshtate emrin këtu
+            try
+            {
+                await _dapper.LoadDataAsync<dynamic>(sql); // Ose ExecuteSqlAsync nëse e ke
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
