@@ -1,6 +1,8 @@
 import { Heart, MessageCircle } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { getFirstImageUrl } from "../utils/imageUtils";
+
 export default function BlogPostCard({ posts }) {
   const safePosts = Array.isArray(posts) ? posts : [];
   const visiblePosts = safePosts.slice(0, 5);
@@ -8,10 +10,7 @@ export default function BlogPostCard({ posts }) {
   return (
     <>
       {visiblePosts.map((p) => {
-        const imageUrl =
-          p?.images && p.images.length > 0
-            ? p.images[0].imageUrl
-            : "";
+        const imageUrl = getFirstImageUrl(p?.images) || "";
 
         return (
           <Link to={`/product-details/${p?.postId}`}>
@@ -21,9 +20,12 @@ export default function BlogPostCard({ posts }) {
           >
             <div className="bg-white h-48 sm:h-56 flex items-center justify-center overflow-hidden">
               <img
-                src={imageUrl}
+                src={imageUrl || "https://via.placeholder.com/300?text=No+Image"}
                 alt={p?.title}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/300?text=No+Image";
+                }}
               />
             </div>
 

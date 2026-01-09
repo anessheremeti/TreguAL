@@ -3,6 +3,7 @@
     import Navbar from "../components/Navbar";
     import Footer from "../components/Footer";
     import RelatedProducts from "./RelatedProducts";
+    import { normalizeImageUrl } from "../utils/imageUtils";
 
     const Eshop = () => {
       const { productId } = useParams();
@@ -27,7 +28,11 @@
 
             if (isMounted) {
               setProduct(data);
-              setActiveImage(data.images?.[0]?.imageUrl || null);
+              // Normalize the first image URL
+              const firstImageUrl = data.images?.[0] 
+                ? normalizeImageUrl(data.images[0]) 
+                : null;
+              setActiveImage(firstImageUrl);
               console.log(data);
             }
           } catch (err) {
@@ -70,19 +75,25 @@
               {/* IMAGES */}
               <div className="flex gap-8">
                 <div className="flex flex-col gap-4">
-                  {product.images?.map((img, i) => (
-                    <img
-                      key={i}
-                      src={img.imageUrl}
-                      alt="thumb"
-                      onClick={() => setActiveImage(img.imageUrl)}
-                      className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border 
-                        ${activeImage === img.imageUrl
-                          ? "border-blue-500 shadow-lg"
-                          : "border-transparent opacity-70 hover:opacity-100"
-                        }`}
-                    />
-                  ))}
+                  {product.images?.map((img, i) => {
+                    const normalizedUrl = normalizeImageUrl(img);
+                    return normalizedUrl ? (
+                      <img
+                        key={i}
+                        src={normalizedUrl}
+                        alt="thumb"
+                        onClick={() => setActiveImage(normalizedUrl)}
+                        className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border 
+                          ${activeImage === normalizedUrl
+                            ? "border-blue-500 shadow-lg"
+                            : "border-transparent opacity-70 hover:opacity-100"
+                          }`}
+                        onError={(e) => {
+                          e.target.src = "https://via.placeholder.com/300?text=No+Image";
+                        }}
+                      />
+                    ) : null;
+                  })}
                 </div>
 
                 <div className="bg-white/5 rounded-xl p-6 flex items-center justify-center shadow-lg w-[450px] h-[37rem]">
@@ -91,6 +102,9 @@
                       src={activeImage}
                       className="w-[450px] h-[450px] object-contain"
                       alt="main"
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/300?text=No+Image";
+                      }}
                     />
                   )}
                 </div>
