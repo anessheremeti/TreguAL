@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System;
-
+using System.Linq;
+using CloudinaryDotNet;
 
 
 namespace HelloWorld.Controllers;
@@ -15,10 +16,15 @@ public class PostsController : ControllerBase
 {
     private readonly IPostService _service;
 private readonly IWebHostEnvironment _env;
- public PostsController(IPostService service, IWebHostEnvironment env)
+
+private readonly Cloudinary _cloudinary;
+
+ public PostsController(IPostService service, IWebHostEnvironment env,Cloudinary cloudinary)
 {
     _service = service;
     _env = env;
+        _cloudinary = cloudinary;
+
 }
 [Authorize]
 [HttpGet("me")]
@@ -32,7 +38,7 @@ public async Task<IActionResult> GetMyPosts()
 
     var posts = await _service.GetByUserAsync(userId);
 
-    // ✅ Siguro postId në response (camelCase)
+    // ✅ Siguro postId në response (camelCase) dhe normalizo imazhet
     var result = posts.Select(p => new
     {
         postId = p.PostId,
@@ -41,8 +47,14 @@ public async Task<IActionResult> GetMyPosts()
         phoneNumber = p.PhoneNumber,
         categoryId = p.CategoryId,
         userId = p.UserId,
-        createdAt = p.CreatedAt,      // nëse e ki
-        images = p.Images            // nëse i kthen
+        createdAt = p.CreatedAt,
+        images = (p.Images ?? new List<PostImage>()).Select(img => new
+        {
+            postImageId = img.PostImageId,
+            postId = img.PostId,
+            imageUrl = img.ImageUrl,
+            createdAt = img.CreatedAt
+        }).ToList()
     });
 
     return Ok(result);

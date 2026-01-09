@@ -2,6 +2,7 @@ using Dapper;
 using HelloWorld.Interfaces;
 using HelloWorld.Models;
 using MySqlConnector;
+using System.Collections.Generic;
 
 namespace HelloWorld.Services;
 
@@ -126,7 +127,39 @@ public class PostService : IPostService
     ";
 
     using var db = Conn();
-    return await db.QueryAsync<Post>(sql, new { userId });
+    var posts = (await db.QueryAsync<Post>(sql, new { userId })).ToList();
+
+    if (!posts.Any())
+        return posts;
+
+    // Load images for all posts
+    const string imgSql = @"
+        SELECT
+            post_image_id AS PostImageId,
+            post_id AS PostId,
+            image_url AS ImageUrl,
+            created_at AS CreatedAt
+        FROM post_images
+        WHERE post_id IN @PostIds
+    ";
+
+    var images = await db.QueryAsync<PostImage>(
+        imgSql,
+        new { PostIds = posts.Select(p => p.PostId).ToArray() }
+    );
+
+    var imagesByPost = images.GroupBy(i => i.PostId)
+                             .ToDictionary(g => g.Key, g => g.ToList());
+
+    foreach (var post in posts)
+    {
+        if (imagesByPost.TryGetValue(post.PostId, out var imgs))
+            post.Images = imgs;
+        else
+            post.Images = new List<PostImage>(); // Initialize empty list if no images
+    }
+
+    return posts;
 }
 
 
@@ -179,6 +212,10 @@ public class PostService : IPostService
 
     public async Task<bool> AddImageAsync(uint postId, string imageUrl)
     {
+        // Accept both relative paths (e.g., "/uploads/...") and absolute URLs
+        if (string.IsNullOrWhiteSpace(imageUrl))
+            return false;
+
         const string sql = @"
         INSERT INTO post_images (post_id, image_url)
         VALUES (@postId, @imageUrl)";
@@ -192,5 +229,17 @@ public class PostService : IPostService
         const string sql = @"SELECT * FROM post_images WHERE post_id = @postId";
         using var db = Conn();
         return await db.QueryAsync<PostImage>(sql, new { postId });
+    }
+
+    // Migrate relative image URLs (e.g. "/uploads/...") to absolute by prefixing baseUrl.
+    public async Task<int> MigrateRelativeImageUrlsAsync(string baseUrl)
+    {
+        const string sql = @"
+        UPDATE post_images
+        SET image_url = CONCAT(@BaseUrl, image_url)
+        WHERE image_url NOT LIKE 'http%' AND (image_url LIKE '/%' OR image_url LIKE 'uploads/%')";
+
+        using var db = Conn();
+        return await db.ExecuteAsync(sql, new { BaseUrl = baseUrl });
     }
 }
