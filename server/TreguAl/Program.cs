@@ -86,7 +86,7 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAdminPostService, AdminPostService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IAdsService, AdsService>();
-
+builder.Services.AddScoped<IRelatedService, RelatedService>();
 /* JWT */
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];

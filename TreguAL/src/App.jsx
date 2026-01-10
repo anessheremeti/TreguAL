@@ -11,7 +11,7 @@ import DashboardAdmin from "./pages/DashboardAdmin";
 import MyPostsPage from "./pages/MyPostsList";
 import Blog from "./pages/Blog";
 import AboutUs from "./pages/AboutUs";
-import SignUp  from "./pages/SignUp";
+import SignUp from "./pages/SignUp";
 import MyProfile from "./pages/MyProfile";
 function App() {
   return (
@@ -20,10 +20,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/product" element={<Product />} />
         <Route path="/addItemScreen" element={<AddItemScreen />} />
-         <Route path="/product-details/:productId" element={<EShop />} /> 
+        <Route path="/product-details/:productId" element={<EShop />} />
         <Route path="/my-posts" element={<MyPostsPage />} />
         <Route path="/login" element={<Login />} />
-                <Route path="/signUp" element={<SignUp />} />
+        <Route path="/signUp" element={<SignUp />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         <Route path="aboutus" element={<AboutUs />} />

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import RelatedProducts from "./RelatedProducts";
 import { normalizeImageUrl } from "../utils/imageUtils";
+import RelatedProducts from "../pages/RelatedProducts.jsx";
 
 const Eshop = () => {
   const { productId } = useParams();
@@ -13,10 +13,12 @@ const Eshop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // useEffect 1: Ngarkimi i të dhënave nga API
   useEffect(() => {
     let isMounted = true;
 
     const fetchProduct = async () => {
+      setLoading(true); // E bëjmë loading sa herë ndryshon ID-ja
       try {
         const res = await fetch(`http://localhost:5104/api/posts/${productId}`);
 
@@ -28,12 +30,17 @@ const Eshop = () => {
 
         if (isMounted) {
           setProduct(data);
-          // Normalize the first image URL
-          const firstImageUrl = data.images?.[0]
-            ? normalizeImageUrl(data.images[0])
-            : null;
-          setActiveImage(firstImageUrl);
-          console.log(data);
+
+          // Përcaktimi i imazhit kryesor (provon disa fusha të mundshme nga API)
+          const rawImage = data.images?.[0] || data.postImages?.[0] || data.imageUrl;
+
+          if (rawImage) {
+            setActiveImage(normalizeImageUrl(rawImage));
+          } else {
+            setActiveImage("https://via.placeholder.com/450?text=Pa+Imazh");
+          }
+
+          console.log("Data e marrë nga API:", data);
         }
       } catch (err) {
         if (isMounted) setError(err.message);
@@ -47,6 +54,11 @@ const Eshop = () => {
     return () => {
       isMounted = false;
     };
+  }, [productId]); // Kjo detyron rifreskimin kur klikon produkte të ngjashme
+
+  // useEffect 2: Dërgimi i faqes në krye kur ndryshon produkti
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, [productId]);
 
   if (loading) {
@@ -72,7 +84,7 @@ const Eshop = () => {
       <div className="container mx-auto px-6 lg:px-20 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
 
-          {/* IMAGES */}
+          {/* SEKSIONI I IMAZHEVE */}
           <div className="flex gap-8">
             <div className="flex flex-col gap-4">
               {product.images?.map((img, i) => {
@@ -84,7 +96,7 @@ const Eshop = () => {
                     alt="thumb"
                     onClick={() => setActiveImage(normalizedUrl)}
                     className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border 
-                          ${activeImage === normalizedUrl
+                      ${activeImage === normalizedUrl
                         ? "border-blue-500 shadow-lg"
                         : "border-transparent opacity-70 hover:opacity-100"
                       }`}
@@ -110,7 +122,7 @@ const Eshop = () => {
             </div>
           </div>
 
-          {/* DETAILS */}
+          {/* DETAJET E PRODUKTIT */}
           <div className="max-w-xl space-y-8">
             <h1 className="text-3xl lg:text-4xl font-semibold">
               {product.title}
@@ -127,17 +139,14 @@ const Eshop = () => {
               {product.description}
             </p>
 
-            {/* Butoni Dinamik */}
             <button
               onClick={() => {
-                // Pastrojmë numrin nga hapësirat ose karakteret extra (+, -, etj)
-                const cleanNumber = product.phoneNumber.replace(/\D/g, '');
+                const cleanNumber = product.phoneNumber?.replace(/\D/g, '') || "";
                 const message = encodeURIComponent(`Përshëndetje, jam i interesuar për: ${product.title}`);
                 window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
               }}
               className="bg-green-600 hover:bg-green-500 transition px-8 py-3 rounded-lg font-medium shadow-lg flex items-center justify-center gap-2"
             >
-              {/* Ikona e WhatsApp (Opsionale) */}
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.887.002-5.462-4.415-9.89-9.881-9.891-5.446 0-9.884 4.438-9.887 9.887-.001 2.22.634 4.385 1.84 6.274l-.993 3.63 3.74-.981z" />
               </svg>
@@ -148,17 +157,12 @@ const Eshop = () => {
               Telefon: <span className="font-semibold">{product.phoneNumber}</span>
             </p>
 
+            {/* TAB-ET E INFORMACIONIT */}
             <div className="mt-6 border-b border-white/10">
               <div className="flex gap-8 text-lg pb-3">
-                <button className="border-b-2 border-blue-500 pb-3">
-                  Përshkrimi
-                </button>
-                <button className="opacity-70 hover:opacity-100 pb-3">
-                  Informacion shtesë
-                </button>
-                <button className="opacity-70 hover:opacity-100 pb-3">
-                  Pamje paraprake
-                </button>
+                <button className="border-b-2 border-blue-500 pb-3">Përshkrimi</button>
+                <button className="opacity-70 hover:opacity-100 pb-3">Informacion shtesë</button>
+                <button className="opacity-70 hover:opacity-100 pb-3">Pamje paraprake</button>
               </div>
             </div>
 
@@ -168,8 +172,15 @@ const Eshop = () => {
           </div>
         </div>
 
-        {/* related placeholder */}
-        <RelatedProducts products={[]} />
+        {/* PRODUKTET E NGJASHME */}
+        <div className="mt-20">
+          {product && (
+            <RelatedProducts
+              categoryId={product.categoryId}
+              currentPostId={product.postId || product.post_id}
+            />
+          )}
+        </div>
       </div>
 
       <Footer />
