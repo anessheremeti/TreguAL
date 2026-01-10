@@ -1,31 +1,22 @@
 import ProductCard from './ProductCard';
-import {useState,useEffect}  from "react";
+import { Link } from 'react-router-dom';
 import React from 'react';
-import {Link} from 'react-router-dom'; 
-
 
 function ProductGrid({ products }) {
+  if (!products || products.length === 0) {
+    return (
+      <div className="text-center py-12 text-gray-400">
+        Nuk ka produkte për t'u shfaqur
+      </div>
+    );
+  }
 
-  const [data,setData]=useState([]);
-
-  useEffect(()=>{
-    const fetchData=async()=>{
-      try{
-        const response=await fetch('http://localhost:5104/api/posts');
-        const jsonData=await response.json();
-        setData(jsonData);
-        console.log(jsonData);
-      }catch(error){
-        console.error('Error fetching products:',error);
-      }    };
-    fetchData();
-  },);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {data.map(product => (
-        <Link to={`/product-details/${product.postId}`} key={product.postIdd}>
-                  <ProductCard key={product.postId} product={product} />
-          </Link> 
+      {products.map(product => (
+        <Link to={`/product-details/${product.postId}`} key={product.postId}>
+          <ProductCard product={product} />
+        </Link>
       ))}
     </div>
   );

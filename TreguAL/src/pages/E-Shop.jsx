@@ -13,34 +13,29 @@ const Eshop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect 1: Ngarkimi i të dhënave nga API
+  // =========================
+  // Fetch product details
+  // =========================
   useEffect(() => {
     let isMounted = true;
 
     const fetchProduct = async () => {
-      setLoading(true); // E bëjmë loading sa herë ndryshon ID-ja
+      setLoading(true);
       try {
         const res = await fetch(`http://localhost:5104/api/posts/${productId}`);
-
-        if (!res.ok) {
-          throw new Error("Produkti nuk u gjet");
-        }
+        if (!res.ok) throw new Error("Produkti nuk u gjet");
 
         const data = await res.json();
 
         if (isMounted) {
           setProduct(data);
 
-          // Përcaktimi i imazhit kryesor (provon disa fusha të mundshme nga API)
-          const rawImage = data.images?.[0] || data.postImages?.[0] || data.imageUrl;
+          const rawImage =
+            data.images?.[0] || data.postImages?.[0] || data.imageUrl;
 
-          if (rawImage) {
-            setActiveImage(normalizeImageUrl(rawImage));
-          } else {
-            setActiveImage("https://via.placeholder.com/450?text=Pa+Imazh");
-          }
-
-          console.log("Data e marrë nga API:", data);
+          setActiveImage(
+            rawImage ? normalizeImageUrl(rawImage) : "https://via.placeholder.com/450?text=Pa+Imazh"
+          );
         }
       } catch (err) {
         if (isMounted) setError(err.message);
@@ -50,32 +45,19 @@ const Eshop = () => {
     };
 
     fetchProduct();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [productId]); // Kjo detyron rifreskimin kur klikon produkte të ngjashme
-
-  // useEffect 2: Dërgimi i faqes në krye kur ndryshon produkti
-  useEffect(() => {
-    window.scrollTo(0, 0);
+    return () => { isMounted = false; };
   }, [productId]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0D0F1A] text-white">
-        Duke u ngarkuar...
-      </div>
-    );
-  }
+  useEffect(() => window.scrollTo(0, 0), [productId]);
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0D0F1A] text-red-400">
-        {error}
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-[#0D0F1A] text-white">Duke u ngarkuar...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center bg-[#0D0F1A] text-red-400">{error}</div>;
+
+  // =========================
+  // Extract categoryId safely
+  // =========================
+  const categoryId = product?.categoryId ?? product?.category_id ?? null;
+  const currentPostId = product?.postId ?? product?.post_id ?? null;
 
   return (
     <div className="font-brand bg-[#0D0F1A] text-white min-h-screen">
@@ -83,28 +65,25 @@ const Eshop = () => {
 
       <div className="container mx-auto px-6 lg:px-20 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-
-          {/* SEKSIONI I IMAZHEVE */}
+          {/* IMAGES */}
           <div className="flex gap-8">
             <div className="flex flex-col gap-4">
               {product.images?.map((img, i) => {
-                const normalizedUrl = normalizeImageUrl(img);
-                return normalizedUrl ? (
+                const url = normalizeImageUrl(img);
+                return url && (
                   <img
                     key={i}
-                    src={normalizedUrl}
+                    src={url}
                     alt="thumb"
-                    onClick={() => setActiveImage(normalizedUrl)}
-                    className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border 
-                      ${activeImage === normalizedUrl
+                    onClick={() => setActiveImage(url)}
+                    className={`w-24 h-24 object-cover rounded-lg cursor-pointer transition border ${
+                      activeImage === url
                         ? "border-blue-500 shadow-lg"
                         : "border-transparent opacity-70 hover:opacity-100"
-                      }`}
-                    onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/300?text=No+Image";
-                    }}
+                    }`}
+                    onError={(e) => e.target.src = "https://via.placeholder.com/300?text=No+Image"}
                   />
-                ) : null;
+                );
               })}
             </div>
 
@@ -114,73 +93,49 @@ const Eshop = () => {
                   src={activeImage}
                   className="w-[450px] h-[450px] object-contain"
                   alt="main"
-                  onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/300?text=No+Image";
-                  }}
+                  onError={(e) => e.target.src = "https://via.placeholder.com/300?text=No+Image"}
                 />
               )}
             </div>
           </div>
 
-          {/* DETAJET E PRODUKTIT */}
+          {/* PRODUCT DETAILS */}
           <div className="max-w-xl space-y-8">
-            <h1 className="text-3xl lg:text-4xl font-semibold">
-              {product.title}
-            </h1>
+            <h1 className="text-3xl lg:text-4xl font-semibold">{product.title}</h1>
 
             <div className="flex items-center gap-2">
-              {[1, 2, 3, 4, 5].map((_, i) => (
-                <span key={i} className="text-yellow-400 text-xl">★</span>
-              ))}
+              {[1, 2, 3, 4, 5].map((_, i) => <span key={i} className="text-yellow-400 text-xl">★</span>)}
               <span className="text-sm opacity-70">(top)</span>
             </div>
 
-            <p className="opacity-75 leading-relaxed">
-              {product.description}
-            </p>
+            <p className="opacity-75 leading-relaxed">{product.description}</p>
 
             <button
               onClick={() => {
-                const cleanNumber = product.phoneNumber?.replace(/\D/g, '') || "";
+                const cleanNumber = product.phoneNumber?.replace(/\D/g, "") || "";
                 const message = encodeURIComponent(`Përshëndetje, jam i interesuar për: ${product.title}`);
                 window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
               }}
               className="bg-green-600 hover:bg-green-500 transition px-8 py-3 rounded-lg font-medium shadow-lg flex items-center justify-center gap-2"
             >
-              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.887.002-5.462-4.415-9.89-9.881-9.891-5.446 0-9.884 4.438-9.887 9.887-.001 2.22.634 4.385 1.84 6.274l-.993 3.63 3.74-.981z" />
-              </svg>
               Kontakto Shitësin
             </button>
 
             <p className="text-sm opacity-80">
               Telefon: <span className="font-semibold">{product.phoneNumber}</span>
             </p>
-
-            {/* TAB-ET E INFORMACIONIT */}
-            <div className="mt-6 border-b border-white/10">
-              <div className="flex gap-8 text-lg pb-3">
-                <button className="border-b-2 border-blue-500 pb-3">Përshkrimi</button>
-                <button className="opacity-70 hover:opacity-100 pb-3">Informacion shtesë</button>
-                <button className="opacity-70 hover:opacity-100 pb-3">Pamje paraprake</button>
-              </div>
-            </div>
-
-            <p className="opacity-80 leading-relaxed pt-4">
-              {product.description}
-            </p>
           </div>
         </div>
 
-        {/* PRODUKTET E NGJASHME */}
-        <div className="mt-20">
-          {product && (
+        {/* RELATED PRODUCTS */}
+        {categoryId && currentPostId && (
+          <div className="mt-20">
             <RelatedProducts
-              categoryId={product.categoryId}
-              currentPostId={product.postId || product.post_id}
+              categoryId={categoryId}
+              currentPostId={currentPostId}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <Footer />
