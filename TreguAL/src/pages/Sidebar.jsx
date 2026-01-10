@@ -12,8 +12,7 @@ export default function Sidebar({ setPage }) {
     { id: "users", label: "Lista e përdoruesve", icon: "fa-solid fa-users" },
     { id: "posts", label: "Post Management", icon: "fa-solid fa-list" },
     { id: "ads", label: "Ads Management", icon: "fa-solid fa-bullhorn" },
-    { id: "payments", label: "Payments", icon: "fa-solid fa-money-bill" },
-    { id: "reviews", label: "Reviews", icon: "fa-solid fa-star" },
+
     {
       id: "logout",
       label: "Logout",
@@ -85,10 +84,9 @@ export default function Sidebar({ setPage }) {
               }}
               className={`
                 flex items-center py-3 px-4 rounded-xl transition-all gap-3
-                ${
-                  active === item.id
-                    ? "bg-white text-[#3C3DBF] font-semibold"
-                    : "hover:bg-white/20"
+                ${active === item.id
+                  ? "bg-white text-[#3C3DBF] font-semibold"
+                  : "hover:bg-white/20"
                 }
               `}
             >
