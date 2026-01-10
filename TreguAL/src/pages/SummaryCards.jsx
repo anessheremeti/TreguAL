@@ -12,8 +12,7 @@ export default function SummaryCards() {
   const data = [
     { title: "Total Users", value: stats.totalUsers, icon: "fa-solid fa-users" },
     { title: "Active Posts", value: stats.activePosts, icon: "fa-solid fa-list" },
-    { title: "Pending Ads", value: stats.pendingAds, icon: "fa-solid fa-clock" },
-    { title: "Total Payments", value: stats.totalPayments, icon: "fa-solid fa-money-bill" },
+    { title: "Ads", value: stats.pendingAds, icon: "fa-solid fa-clock" },
   ];
 
   return (
