@@ -150,9 +150,9 @@ const Navbar = () => {
                 <Link to="/" onClick={() => setOpen(false)}>
                   <li className="hover:text-gray-300 transition cursor-pointer">Home</li>
                 </Link>
-                <Link to="/e-shop" onClick={() => setOpen(false)}>
+                <Link to="/product" onClick={() => setOpen(false)}>
                   <li className="hover:text-gray-300 transition cursor-pointer">
-                    E-shop
+                    Products
                   </li>
                 </Link>
                 <Link to="/aboutus" onClick={() => setOpen(false)}>

@@ -28,7 +28,7 @@ function App() {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/aboutus" element={<AboutUs />} />
       <Route path="/blog" element={<Blog />} />
-
+      <Route path="/e-shop" element={<EShop />} />
       {/* AUTHENTICATED ROUTES */}
       <Route element={<ProtectedRoute />}>
         <Route path="/addItemScreen" element={<AddItemScreen />} />
