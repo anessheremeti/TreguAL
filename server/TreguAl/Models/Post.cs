@@ -15,5 +15,6 @@ public class Post
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public List<PostImage> Images { get; set; } = new();
+    // Shto këtë te Models/Post.cs
+    public List<PostImage> Images { get; set; } = new List<PostImage>();
 }
