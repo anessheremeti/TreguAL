@@ -1,8 +1,9 @@
 import "./App.css";
 import React from "react";
-import HomePage from "./pages/HomePage/index";
+import { Routes, Route } from "react-router-dom";
+
+import HomePage from "./pages/HomePage";
 import Product from "./pages/Product";
-import { Routes, Route } from "react-router";
 import EShop from "./pages/E-Shop";
 import AddItemScreen from "./pages/AddItemScreen";
 import Login from "./pages/Login";
@@ -13,26 +14,34 @@ import Blog from "./pages/Blog";
 import AboutUs from "./pages/AboutUs";
 import SignUp from "./pages/SignUp";
 import MyProfile from "./pages/MyProfile";
+
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+
 function App() {
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/product" element={<Product />} />
+    <Routes>
+      {/* PUBLIC ROUTES */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/product" element={<Product />} />
+      <Route path="/product-details/:productId" element={<EShop />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/aboutus" element={<AboutUs />} />
+      <Route path="/blog" element={<Blog />} />
+
+      {/* AUTHENTICATED ROUTES */}
+      <Route element={<ProtectedRoute />}>
         <Route path="/addItemScreen" element={<AddItemScreen />} />
-        <Route path="/product-details/:productId" element={<EShop />} />
         <Route path="/my-posts" element={<MyPostsPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route path="/sidebar" element={<Sidebar />} />
-        <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
-        <Route path="aboutus" element={<AboutUs />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/my-profile" element={<MyProfile />} />
-      </Routes>
-    </>
+        <Route path="/sidebar" element={<Sidebar />} />
+      </Route>
+
+      {/* ADMIN ONLY (role_id === 4) */}
+      <Route element={<ProtectedRoute allowedRoles={[4]} />}>
+        <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+      </Route>
+    </Routes>
   );
 }
 
