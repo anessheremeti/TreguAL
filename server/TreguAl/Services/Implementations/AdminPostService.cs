@@ -62,21 +62,15 @@ namespace HelloWorld.Services.Implementations
         }
 
         // Kjo është metoda që mungonte dhe shkaktonte vizën e kuqe
-        public async Task<bool> DeletePostAsync(int postId)
-        {
-            string sql = "DELETE FROM posts WHERE post_id = @PostId";
+       public async Task<bool> DeletePostAsync(uint postId)
+{
+    string sql = "DELETE FROM posts WHERE post_id = @PostId";
 
-            // Supozojmë se DataDapper ka metodë për ekzekutim (ExecuteSql)
-            // Nëse metoda jote në DataDapper quhet ndryshe, përshtate emrin këtu
-            try
-            {
-                await _dapper.LoadDataAsync<dynamic>(sql); // Ose ExecuteSqlAsync nëse e ke
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+    // ExecuteSqlAsync duhet të kthejë numrin e rreshtave të prekur
+    await _dapper.ExecuteSqlAsync(sql, new { PostId = postId });
+
+    return true;
+}
+
     }
 }
