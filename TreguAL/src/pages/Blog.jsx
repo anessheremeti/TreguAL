@@ -29,7 +29,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen bg-[#181826]">
+    <div className="min-h-screen bg-[#181826] d-hidden">
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
@@ -50,7 +50,7 @@ export default function Blog() {
               <BlogPostCard posts={posts} />
             )}
 
-            <div className="bg-white rounded-lg p-8 border border-gray-200 mt-12">
+            <div className="bg-white rounded-lg p-8 border border-gray-200 mt-12 hidden">
               <h3 className="text-2xl font-bold mb-6">Post a comment</h3>
 
               <form onSubmit={handleSubmit} className="space-y-6">

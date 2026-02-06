@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import {Link} from "react-router-dom";
 import ProductGrid from "../components/ProductGrid";
 import FilterSidebar from "../components/FilterSidebar";
 import Pagination from "../components/Pagination";
@@ -21,13 +22,15 @@ function ProductCatalog() {
 
   // Funksoni për mapimin e Ads (i njejtë me atë në Admin)
   const mapAds = (data) => {
-    if (!data || !Array.isArray(data)) return [];
-    return data.map((x) => ({
-      id: x.adId || x.ad_id,
-      title: x.title || x.Title || "",
-      image: normalizeImageUrl(x.imageUrl || x.ImageUrl || x.image_url || ""),
-    }));
-  };
+  if (!Array.isArray(data)) return [];
+
+  return data.map((x) => ({
+    id: x.postId || x.post_id,   // 🔥 JO adId
+    title: x.title || "",
+    image: normalizeImageUrl(x.image || x.imageUrl || ""),
+  }));
+};
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +56,7 @@ function ProductCatalog() {
           const rawAds = await adsRes.json();
           adsData = mapAds(rawAds);
         }
-
+        console.log("Ads të marra:", adsData); // Log për të parë ads në console
         setProducts(productsData);
         setCategories(categoriesData);
         setAds(adsData); 
@@ -120,18 +123,21 @@ function ProductCatalog() {
               <h3 className="text-lg font-semibold mb-4 border-b border-white/10 pb-2">Reklamat</h3>
               <div className="space-y-4">
                 {ads.length > 0 ? (
+                 
                   ads.map((ad) => (
+                 
                     <div key={ad.id} className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 transition-all hover:border-emerald-500/50">
                       <img 
                         src={ad.image} 
                         alt={ad.title} 
                         className="w-full h-40 object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                        onError={(e) => { e.target.src = "https://via.placeholder.com/300x200?text=No+Image"; }}
                       />
                       <div className="p-3">
                         <p className="text-sm font-medium text-gray-200 truncate">{ad.title}</p>
                       </div>
+                      
                     </div>
+                
                   ))
                 ) : (
                   <p className="text-xs text-gray-500 italic">S'ka reklama aktualisht.</p>
