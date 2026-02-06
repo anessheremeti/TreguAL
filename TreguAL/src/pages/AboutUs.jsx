@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useMemo } from "react";
 import BannerImage from "../assets/AboutUsImage.png";
 import Navbar from "../components/Navbar/index";
 import Footer from "../components/Footer/index";
 import AboutUsvideo from "../assets/AboutUsvideo.mp4";
 import { Link } from "react-router-dom";
+import {normalizeImageUrl} from "../utils/imageUtils";
 export default function AboutUs() {
   const [latestPosts, setLatestPosts] = useState([]);
 
@@ -21,6 +22,15 @@ export default function AboutUs() {
     };
     fetchPosts();
   }, []);
+  
+  const normalizedPosts = useMemo(
+    () =>
+      latestPosts.map((post) => ({
+        ...post,
+        imageUrl: normalizeImageUrl(post.imageUrl),
+      })),
+    [latestPosts]
+  );
   return (
     <>
       <Navbar />
@@ -103,26 +113,26 @@ export default function AboutUs() {
             </div>
           </div>
         </div>
-
-        {/* ================= LAST BLOG POST ================= */}
+      {console.log(latestPosts)}
+      
+  
+        {/* ===== LAST BLOG POSTS ===== */}
         <div className="max-w-7xl mx-auto py-20 text-white">
           <h2 className="text-3xl font-semibold mb-10">Last blog post</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {latestPosts.map((post) => (
-              <Link
-                to='/product'
-                key={post.postId}
-                className="block"
-              >
+            {normalizedPosts.map((post) => (
+              <Link to="/product" key={post.postId} className="block">
                 <BlogCard
-                  img={post.imageUrl || "/assets/placeholder.png"}
+                  imageUrl={post.imageUrl}
                   title={post.title}
+                  description={post.description}
                 />
               </Link>
             ))}
           </div>
         </div>
       </section>
+
       <Footer />
     </>
   );
@@ -161,18 +171,18 @@ function ProgressBar({ label, percent, color }) {
   );
 }
 
-function BlogCard({ img, title }) {
+function BlogCard({ imageUrl, title, description }) {
   return (
     <div className=" rounded-xl shadow-md overflow-hidden flex flex-col text-center">
       <div className="w-full h-60 bg-white flex items-center justify-center">
-        <img src={img} alt={title} className="w-full h-full object-contain" />
+        <img src={imageUrl} alt={title} className="w-full h-full object-contain" />
       </div>
 
       <div className="px-6 py-6 text-white ">
         <h3 className="font-semibold text-base md:text-lg mb-2">{title}</h3>
 
         <p className="text-sm text-gray-300 mb-4">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {description}
         </p>
 
         <a
